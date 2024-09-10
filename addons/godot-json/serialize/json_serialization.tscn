@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dt3cnb7uffkje"]
+
+[ext_resource type="Script" path="res://addons/godot-json/serialize/json_serialization.gd" id="1_mlbr7"]
+
+[node name="JSONSerialization" type="Node"]
+script = ExtResource("1_mlbr7")
