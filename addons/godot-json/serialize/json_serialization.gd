@@ -5,11 +5,11 @@ extends JSONSerializationImpl
 
 const _DEFAULT_REGISTRY_PATH: String = "res://json_object_config_registry.tres"
 
-var _registry_setting_path: String = "nethlib/modules/json_object_config_registry"
+const _SETTING_PATH: String = "godot_json/config/json_object_config_registry"
 
 var _registry_path: String:
 	get():
-		return ProjectSettings.get_setting(_registry_setting_path, _DEFAULT_REGISTRY_PATH)
+		return ProjectSettings.get_setting(_SETTING_PATH, _DEFAULT_REGISTRY_PATH)
 	set(value):
 		assert(false, "_registry_path is read only")
 
@@ -133,14 +133,14 @@ func _ready() -> void:
 	# In editor; handle ProjectSettings for object config registry
 	if Engine.is_editor_hint():
 		# Create the setting if it does not exist
-		if !ProjectSettings.has_setting(_registry_setting_path):
-			ProjectSettings.set_setting(_registry_setting_path, _DEFAULT_REGISTRY_PATH)
+		if !ProjectSettings.has_setting(_SETTING_PATH):
+			ProjectSettings.set_setting(_SETTING_PATH, _DEFAULT_REGISTRY_PATH)
 		
 		# Set the initial values & info for it every time
-		ProjectSettings.set_initial_value(_registry_setting_path, _DEFAULT_REGISTRY_PATH)
-		ProjectSettings.set_as_basic(_registry_setting_path, true)
+		ProjectSettings.set_initial_value(_SETTING_PATH, _DEFAULT_REGISTRY_PATH)
+		ProjectSettings.set_as_basic(_SETTING_PATH, true)
 		ProjectSettings.add_property_info({
-			"name": _registry_setting_path,
+			"name": _SETTING_PATH,
 			"type": TYPE_STRING,
 			"hint": PROPERTY_HINT_FILE,
 			"hint_string": "*.tres"
@@ -172,7 +172,7 @@ func _on_project_settings_changed() -> void:
 func _on_file_moved(old_file: String, new_file: String) -> void:
 	if old_file == _registry_path || new_file == _registry_path:
 		_ignore_setting_change = true
-		ProjectSettings.set_setting(_registry_setting_path, new_file)
+		ProjectSettings.set_setting(_SETTING_PATH, new_file)
 		_registry_path_cache = new_file
 		_reload_registry()
 		_ignore_setting_change = false
@@ -195,8 +195,8 @@ func _reload_registry() -> void:
 			"is not of type JSONObjectConfigRegistry") % _registry_path)
 	else:
 		# File doesn't exist, push warning
-		push_warning(("No JSONObjectConfigRegistry file found @ path %s. Ensure project " + \
-		"setting nethlib/modules/json_object_config_registry points to a correct file.") \
-		% _registry_path)
+		push_warning(("No JSONObjectConfigRegistry file found @ path %s.\nEnsure project " + \
+		"setting %s points to a correct file.") \
+		% [_registry_path, _SETTING_PATH])
 	
 	JSONSerialization.object_config_registry = registry
