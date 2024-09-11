@@ -5,7 +5,7 @@
 Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless methods of serializing any variant, including Objects and their properties.
 
 ## Table of Contents
-- [Why?](#Why?)
+- [Why?](#Why)
 - [Support Links](#Support-Links)
 - [Installation](#Installation)
 - [Limitations](#Limitations)
