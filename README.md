@@ -18,10 +18,7 @@ For now, message me on Discord for direct support: cneth
 TODO
 
 ## Limitations
-#### Project in "Unsaved" State when opened
-When opening the project with improved-godot-json enabled, the project will be in an "unsaved" state. This is due to the usage of [EditorPlugin.add_autoload_singleton()](https://docs.godotengine.org/en/stable/classes/class_editorplugin.html#class-editorplugin-method-add-autoload-singleton)  to automatically register JSONSerialization as a global autoloaded scene, making it accessible throughout the project. There are no actual changes to the project's files, this is just a "bug" caused by 
-##### Workaround
-Uncheck the project setting `improved_json/config/enable_global_instance` and manually add `res://addons/godot-improved-json/serialize/json_serialization.tscn` to your Autoloads under the Globals tab in ProjectSettings. This will prevent the plugin from registering it every time the project is opened.
+TODO
 
 ## Basic Usage
 TODO
