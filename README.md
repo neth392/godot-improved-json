@@ -4,6 +4,14 @@
 
 Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless methods of serializing any variant, including Objects and their properties.
 
+## Table of Contents
+- [Why?](#Why?)
+- [Support Links](<#Support Links>)
+- [Installation](#Installation)
+- [Limitations](#Limitations)
+- [Basic Usage](<#Basic Usage>)
+- [Object Serialization](<#Object Serialization>)
+
 ## Why?
 Originally this project was created to bring JSON support to all of Godot's native types, including Objects & their properties. But with [Godot 4.4-dev2](https://godotengine.org/article/dev-snapshot-godot-4-4-dev-2/)'s release, [this commit](https://github.com/godotengine/godot/pull/92656) was merged doing just that. However, after testing the new changes there were still issues that this project solves, predominantly in regards to Objects.
 
@@ -23,10 +31,12 @@ TODO
 - Nested/inner classes are **not supported**
 - A `JSONObjectConfigRegistry` file somewhere in the project directory is **required**. Object serialization will not work without it, but the addon *shouldn't* break completely.
 - `TYPE_NIL`, `TYPE_CALLABLE`, `TYPE_SIGNAL`, `TYPE_RID`, & `TYPE_MAX`  are **not supported**.
-
-
+- There is currently a bug that causes the `JSONSerialization` autoload to have it's `_ready()` function called twice. I have tried everything to fix this and I can not figure it out. The only downside looks to be that a console error is printed twice if your registry isn't set up properly. If anyone knows a fix that would be greatly appreciated.
 ## Basic Usage
 TODO
 
 ## Object Serialization
 TODO
+
+
+[Back to Top ↑](<#Godot Improved JSON>)
