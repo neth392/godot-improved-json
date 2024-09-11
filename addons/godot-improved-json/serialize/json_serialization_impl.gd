@@ -14,6 +14,7 @@ class_name JSONSerializationImpl extends Node
 
 ## [member JSONSerializer.id]:[JSONSerializer]
 var _serializers: Dictionary = {}
+var _can_deserialize_into: Dictionary = {}
 
 ## The user's [JSONObjectConfigRegistry] to allow adding [JSONObjectConfig]s via
 ## the inspector.
@@ -54,12 +55,20 @@ func add_serializer(serializer: JSONSerializer) -> void:
 	assert(serializer != null, "serializer is null")
 	assert(!_serializers.has(serializer.id), "a serializer with id (%s) already exists" % serializer.id)
 	_serializers[serializer.id] = serializer
+	_can_deserialize_into[serializer.id] = serializer.can_deserialize_into()
 
 
 ## Removes the [param serializer], returning true if removed, false if not.
 func remove_serializer(serializer: JSONSerializer) -> bool:
 	assert(serializer != null, "serializer is null")
+	_can_deserialize_into.erase(serializer.id)
 	return _serializers.erase(serializer.id)
+
+
+## Returns true if the [param type] has a [JSONSerializer] that can be deserialized_into,
+## false if not.
+func can_deserialize_into_type(type: Variant.Type) -> bool:
+	return _can_deserialize_into.get(str(type), false)
 
 
 ## Returns the [JSONSerializer] with the [param id], or null if one does not exist.
@@ -113,7 +122,7 @@ func deserialize_into(wrapped_value: Dictionary, instance: Variant) -> void:
 	
 	var serializer: JSONSerializer = get_serializer_for_type(typeof(instance))
 	assert(serializer != null, "get_serializer_for_type(typeof(%s)) returned null" % instance)
-	assert(serializer.can_deserialize_into(wrapped_value, instance), "")
+	assert(serializer.can_deserialize_into(), "")
 	
 	# In debug, ensure serializers match up from instance type & wrapped type
 	if OS.is_debug_build():

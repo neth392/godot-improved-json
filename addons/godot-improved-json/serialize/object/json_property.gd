@@ -18,7 +18,10 @@ enum IfMissing {
 @export var json_key: StringName
 
 ## The name of the property in the [Object].
-@export var property_name: String
+@export var property_name: String:
+	set(value):
+		property_name = value
+		notify_property_list_changed()
 
 @export_group("Advanced")
 
@@ -50,14 +53,17 @@ enum IfMissing {
 ## as the inner system to construct typed arrays will break if the array's type changes.
 @export var deserialize_into: bool = false
 
-
+## For use only in the editor
 var _editor_script: Script:
+	set(value):
+		_editor_script = value
+		notify_property_list_changed()
 	get():
 		if _editor_script != null:
 			return _editor_script
 		if _editor_class_name.is_empty() || ClassDB.class_exists(_editor_class_name):
 			return null
-		var script_path: String = ScriptUtil.get_script_path_from_class_name(_editor_class_name)
+		var script_path: String = GodotJSONUtil.get_script_path_from_class_name(_editor_class_name)
 		if script_path.is_empty():
 			return null
 		if FileAccess.file_exists(script_path):
@@ -102,7 +108,34 @@ func _validate_property(property: Dictionary) -> void:
 					hints.append(class_property.name)
 		
 		property.hint_string = ",".join(hints)
+	
+	# This code hides the "deserialize_into" if 
+	if property.name == "deserialize_into":
+		for class_property: Dictionary in _editor_get_class_properties():
+			if property_name == class_property.name:
+				if !JSONSerialization.can_deserialize_into_type(class_property.type):
+					property.usage = PROPERTY_USAGE_NONE
+				break
 
+
+## Editor tool method to get the property list from the class this config
+func _editor_get_class_properties() -> Array[Dictionary]:
+	assert(Engine.is_editor_hint(), "editor_get_class_properties() for Editor use only")
+	var properties: Array[Dictionary] = []
+	if _editor_script != null: # Script is set, resolve properties from that
+		properties.append_array(_editor_script.get_script_property_list())
+		properties.append_array(ClassDB.class_get_property_list(_editor_script.get_instance_base_type()))
+	else: # Script not set, try to resolve script
+		var script_path: String = GodotJSONUtil.get_script_path_from_class_name(_editor_class_name)
+		if !script_path.is_empty():
+			var script: Script = load(script_path) as Script
+			if script != null: # Script exists, get properties from it
+				properties.append_array(script.get_script_property_list())
+				properties.append_array(ClassDB.class_get_property_list(script.get_instance_base_type()))
+		elif ClassDB.class_exists(_editor_class_name): # Script doesn't exist, check if type is native
+			properties.append_array(ClassDB.class_get_property_list(_editor_class_name))
+	
+	return properties
 
 func _to_string() -> String:
 	return "JSONProperty(json_key=%s,property_name=%s)" % [json_key, property_name]

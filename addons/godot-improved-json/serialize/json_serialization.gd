@@ -5,7 +5,7 @@ extends JSONSerializationImpl
 
 const _DEFAULT_REGISTRY_PATH: String = "res://json_object_config_registry.tres"
 
-const _SETTING_PATH: String = "godot_json/config/json_object_config_registry"
+const _SETTING_PATH: String = "improved_json/config/json_object_config_registry"
 
 var _registry_path: String:
 	get():
@@ -35,6 +35,7 @@ func new() -> JSONSerializationImpl:
 	instance._basis = _basis
 	return instance
 
+var _is_ready: bool = false
 
 func _ready() -> void:
 	# Add types confirmed to be working with PrimitiveJSONSerializer
@@ -154,7 +155,10 @@ func _ready() -> void:
 		EditorInterface.get_file_system_dock().file_removed.connect(_on_file_removed)
 	
 	# Load the registry
-	_reload_registry()
+	if !_is_ready:
+		push_warning("READY")
+		_reload_registry()
+		_is_ready = true
 
 
 # Handle object config registry path changing
@@ -165,6 +169,7 @@ func _on_project_settings_changed() -> void:
 	if _registry_path == _registry_path_cache:
 		return
 	_registry_path_cache = _registry_path
+	push_warning("CHANGED")
 	_reload_registry()
 
 
@@ -174,12 +179,14 @@ func _on_file_moved(old_file: String, new_file: String) -> void:
 		_ignore_setting_change = true
 		ProjectSettings.set_setting(_SETTING_PATH, new_file)
 		_registry_path_cache = new_file
+		push_warning("MOVED")
 		_reload_registry()
 		_ignore_setting_change = false
 
 
 func _on_file_removed(file: String) -> void:
 	if file == _registry_path:
+		push_warning("REMOVED")
 		_reload_registry()
 
 

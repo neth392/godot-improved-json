@@ -122,13 +122,13 @@ config: JSONObjectConfig) -> void:
 		var serialized_property: Variant = serialized_object.get(property.json_key)
 		var current_property: Variant = object.get(property.property_name)
 		
-		var did_deserialize: bool = false
-		if current_property != null && property.deserialize_into:
-			var deserializer: JSONSerializer = impl.get_serializer_for_type(typeof(current_property))
-			if deserializer.can_deserialize_into(serialized_property, current_property):
-				did_deserialize = true
-				impl.deserialize_into(serialized_property, current_property)
-		
-		if !did_deserialize:
+		# Deserialize into
+		if current_property != null \
+		and property.deserialize_into \
+		and impl.can_deserialize_into_type(typeof(current_property)):
+			
+			impl.deserialize_into(serialized_property, current_property)
+			
+		else: # Deserialize
 			var deserialized_property: Variant = impl.deserialize(serialized_property)
 			object.set(property.property_name, deserialized_property)

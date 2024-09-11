@@ -1,4 +1,5 @@
 ## Some utilities from my NethLib project
+@tool
 class_name GodotJSONUtil extends Object
 
 

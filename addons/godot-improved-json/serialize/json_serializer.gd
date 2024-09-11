@@ -1,4 +1,5 @@
 ## A JSON Serializer for a specific type (or types in some cases)
+@tool
 class_name JSONSerializer extends Resource
 
 
@@ -18,7 +19,7 @@ var _can_deserialize_into: bool = GodotJSONUtil.get_method_count(get_script(),
 
 ## Returns true if [method _deserialize_into] has been overridden by a child class,
 ## false if not. Override this for custom implementations.
-func can_deserialize_into(serialized: Variant, instance: Variant) -> bool:
+func can_deserialize_into() -> bool:
 	return _can_deserialize_into
 
 
