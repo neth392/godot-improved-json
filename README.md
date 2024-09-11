@@ -10,6 +10,7 @@ Originally this project was created to bring JSON support to all of Godot's nati
 The current issues with Godot's new JSON changes that this project addresses are:
 - `JSON.stringify(variant)` and `JSON.parse(variant)` do not detect the variant's type, it is redundantly required to use `JSON.stringify(JSON.from_native(variant))` and `JSON.to_native(JSON.parse(variant))`. Improved JSON automatically detects any variant's type and serializes it accordingly, without the need for boilerplate.
 - JSON Object support in native Godot is still questionable, I'd even say broken/unsupported. In the above point, if `variant` were to be an instance of `MyCustomClass`, when you deserialize it you will not receive an instance of `MyCustomClass`, just an instance of its base type (such as Resource). There is no propery way to simply convert your objects to JSON & back without your own boilerplate, which this project aims to eliminate.
+- Godot 4.4's new `JSON.from_native()` method returns a Dictionary that contains fully spelled out keys such as `__gdtype` for the `Variant.Type`, `basis` and `origin` for `Transform3D`'s values, & more. Improved Godot JSON uses short, one character keys. This increases efficiency and reduces file size, which can add up when dealing with larger JSON files.
 
 ## Support Links
 For now, message me on Discord for direct support: cneth
@@ -18,7 +19,11 @@ For now, message me on Discord for direct support: cneth
 TODO
 
 ## Limitations
-TODO
+- Serialized objects **must** have an explicit `class_name` defined in their script.
+- Nested/inner classes are **not supported**
+- A `JSONObjectConfigRegistry` file somewhere in the project directory is **required**. Object serialization will not work without it, but the addon *shouldn't* break completely.
+- `TYPE_NIL`, `TYPE_CALLABLE`, `TYPE_SIGNAL`, `TYPE_RID`, & `TYPE_MAX`  are **not supported**.
+
 
 ## Basic Usage
 TODO

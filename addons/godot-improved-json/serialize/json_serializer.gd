@@ -55,3 +55,6 @@ func _deserialize_into(serialized: Variant, instance: Variant, impl: JSONSeriali
 
 func _to_string() -> String:
 	return "JSONSerializer(%s)" % id
+
+class SubClassTest extends Resource:
+	pass
