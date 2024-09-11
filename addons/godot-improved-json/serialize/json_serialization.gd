@@ -35,8 +35,6 @@ func new() -> JSONSerializationImpl:
 	instance._basis = _basis
 	return instance
 
-var _is_ready: bool = false
-
 func _ready() -> void:
 	# Add types confirmed to be working with PrimitiveJSONSerializer
 	# see default/primitive_json_serializer_tests.gd for code used to test this
@@ -155,10 +153,8 @@ func _ready() -> void:
 		EditorInterface.get_file_system_dock().file_removed.connect(_on_file_removed)
 	
 	# Load the registry
-	if !_is_ready:
-		push_warning("READY")
-		_reload_registry()
-		_is_ready = true
+	_reload_registry(!Engine.is_editor_hint())
+
 
 
 # Handle object config registry path changing
@@ -169,8 +165,7 @@ func _on_project_settings_changed() -> void:
 	if _registry_path == _registry_path_cache:
 		return
 	_registry_path_cache = _registry_path
-	push_warning("CHANGED")
-	_reload_registry()
+	_reload_registry(true)
 
 
 # Handle registry being moved in editor
@@ -179,28 +174,26 @@ func _on_file_moved(old_file: String, new_file: String) -> void:
 		_ignore_setting_change = true
 		ProjectSettings.set_setting(_SETTING_PATH, new_file)
 		_registry_path_cache = new_file
-		push_warning("MOVED")
-		_reload_registry()
+		_reload_registry(true)
 		_ignore_setting_change = false
 
 
 func _on_file_removed(file: String) -> void:
 	if file == _registry_path:
-		push_warning("REMOVED")
-		_reload_registry()
+		_reload_registry(true)
 
 
 # Loads and sets the registry
-func _reload_registry() -> void:
+func _reload_registry(verbose: bool) -> void:
 	var registry: JSONObjectConfigRegistry = null
 	# File exists
 	if FileAccess.file_exists(_registry_path):
 		registry = ResourceLoader.load(_registry_path) as JSONObjectConfigRegistry
 		# Push warning if it couldn't be loaded
-		if registry == null:
+		if verbose && registry == null:
 			push_warning(("JSONObjectConfigRegistry @ path %s could not be loaded or " + \
 			"is not of type JSONObjectConfigRegistry") % _registry_path)
-	else:
+	elif verbose:
 		# File doesn't exist, push warning
 		push_warning(("No JSONObjectConfigRegistry file found @ path %s.\nEnsure project " + \
 		"setting %s points to a correct file.") \

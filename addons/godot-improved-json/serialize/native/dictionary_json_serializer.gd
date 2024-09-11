@@ -7,9 +7,12 @@ func _get_id() -> Variant:
 
 func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	assert(instance is Dictionary, "instance not of type Dictionary")
+	assert(instance.has("d"), "dictionary (%s) missing key 'd'")
 	
 	if instance.is_empty():
 		return {}
+	
+	var dictionary: Dictionary = instance as Dictionary
 	
 	var serialized: Dictionary = {}
 	
@@ -25,8 +28,8 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 
 func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 	var dictionary: Variant = {}
-	# NOTE: Add support for typed dictionaries eventually.
 	_deserialize_into(serialized, dictionary, impl)
+	
 	return dictionary
 
 
