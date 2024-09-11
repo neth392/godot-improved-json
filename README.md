@@ -6,11 +6,11 @@ Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless metho
 
 ## Table of Contents
 - [Why?](#Why?)
-- [Support Links](<#Support Links>)
+- [Support Links](#Support-Links)
 - [Installation](#Installation)
 - [Limitations](#Limitations)
-- [Basic Usage](<#Basic Usage>)
-- [Object Serialization](<#Object Serialization>)
+- [Basic Usage](#Basic-Usage)
+- [Object Serialization](#Object-Serialization)
 
 ## Why?
 Originally this project was created to bring JSON support to all of Godot's native types, including Objects & their properties. But with [Godot 4.4-dev2](https://godotengine.org/article/dev-snapshot-godot-4-4-dev-2/)'s release, [this commit](https://github.com/godotengine/godot/pull/92656) was merged doing just that. However, after testing the new changes there were still issues that this project solves, predominantly in regards to Objects.
@@ -39,4 +39,4 @@ TODO
 TODO
 
 
-[Back to Top ↑](<#Godot Improved JSON>)
+[Back to Top ↑](#Godot-Improved-JSON)
