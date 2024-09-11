@@ -31,7 +31,8 @@ TODO
 - Nested/inner classes are **not supported**
 - A `JSONObjectConfigRegistry` file somewhere in the project directory is **required**. Object serialization will not work without it, but the addon *shouldn't* break completely.
 - `TYPE_NIL`, `TYPE_CALLABLE`, `TYPE_SIGNAL`, `TYPE_RID`, & `TYPE_MAX`  are **not supported**.
-- There is currently a bug that causes the `JSONSerialization` autoload to have it's `_ready()` function called twice. I have tried everything to fix this and I can not figure it out. The only downside looks to be that a console error is printed twice if your registry isn't set up properly. If anyone knows a fix that would be greatly appreciated.
+- There is currently a bug that causes the `JSONSerialization` autoload to have it's `_ready()` function called twice in the editor when the project is opened. I have tried everything to fix this and I can not figure it out. This shouldn't noticeably impact anything.
+
 ## Basic Usage
 TODO
 

@@ -19,51 +19,13 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	if !array.is_typed():
 		return serialized
 	
-	# Note on the below code:
-	# For typed arrays we need to store information that tells us how to construct the same array.
-	# Only information that is serialized are things NOT meant to change; built in class names
-	# & JSONObjectConfig.id's. Custom class names & script paths can change & we don't want that breaking
-	# the serialized data
+	# Resolve typed dictionary
+	var typed_dict: Dictionary = GodotJSONUtil.create_type_dict(impl, array.get_typed_builtin(), 
+	array.get_typed_class_name(), array.get_typed_script())
 	
-	# Return the type & array for non-object types (dont require a class or script)
-	if array.get_typed_builtin() != TYPE_OBJECT:
-		return {
-			"t": array.get_typed_builtin(), # The typed built in
-			"a": serialized, # The array
-		}
+	typed_dict["a"] = serialized
 	
-	# Make sure the class exists (no reason it shouldn't)
-	assert(!array.get_typed_class_name().is_empty(), "array (%s)'s typed class name is empty" % str(array))
-	
-	# For built in objects, we can just return the class name. Those won't change, and if the do
-	# then other parts of projects will break too (not our problem to worry about)
-	# Can omit the type since if "c" is present, we know it's TYPE_OBJECT
-	if array.get_typed_script() == null:
-		return {
-			"c": array.get_typed_class_name(),
-			"a": serialized
-		}
-	
-	# For custom classes, we'll resolve the JSONObjectConfig for that type. It HAS to exist
-	# for elements to be serialized anyways, so if it doesn't an error will be thrown.
-	# Need to include the base type class name too in order to please Array's constructor
-	
-	# First, get the custom class name from script
-	assert(array.get_typed_script() is Script, "array (%s)'s type's script (%s) not of type Script" \
-	% [array, array.get_typed_script()])
-	
-	var script: Script = array.get_typed_script() as Script
-	assert(!script.get_global_name().is_empty(), ("array (%s)'s type's script (%s) does not have a " + \
-	"class_name defined") % [array, script])
-	
-	var config: JSONObjectConfig = impl.object_config_registry.get_config_by_class(script.get_global_name())
-	assert(config != null, "array (%s)'s type (%s) does not have a JSONObjectConfig associated with it" \
-	% [array, script.get_global_name()])
-	
-	return {
-		"i": config.id, # ID of the config, can resolve class name & base type from this
-		"a": serialized, # The array
-	}
+	return typed_dict
 
 
 func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:

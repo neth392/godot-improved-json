@@ -33,3 +33,49 @@ static func get_class_name(object: Object) -> StringName:
 	if !object.get_class().is_empty():
 		return object.get_class()
 	return &""
+
+
+## Helper function for use with serializing typed arrays & dictionaries (i.e. collections)
+## Returns one of the following options:
+## [br]{"t":[param type]} if any type besides TYPE_OBJECT
+## [br]{"c":[param type_class] if [param type_script] is null (the type is then a built-in object]
+## [br]{"i":[member JSONObjectConfig.id]} if there is a script attached & thus is a custom class.
+static func create_type_dict(impl: JSONSerializationImpl, type: Variant.Type, 
+type_class: StringName, type_script: Script) -> Dictionary:
+	# Note on the below code:
+	# For typed collections we need to store information that tells us how to construct the same collections.
+	# Only information that is serialized are things NOT meant to change; built in class names
+	# & JSONObjectConfig.id's. Custom class names & script paths can change & we don't want that breaking
+	# the serialized data
+	
+	# Return the type  for non-object types (dont require a class or script)
+	if type != TYPE_OBJECT:
+		return {
+			"t": type, # The typed built in
+		}
+	
+	# Make sure the class exists (no reason it shouldn't)
+	assert(!type_class.is_empty(), "type_class (%s) is empty" % type_class)
+	
+	# For built in objects, we can just return the class name. Those won't change, and if the do
+	# then other parts of projects will break too (not our problem to worry about)
+	# Can omit the type since if "c" is present, we know it's TYPE_OBJECT
+	if type_script == null:
+		return {
+			"c": type_class,
+		}
+	
+	# For custom classes, we'll resolve the JSONObjectConfig for that type. It HAS to exist
+	# for elements to be serialized anyways, so if it doesn't an error will be thrown.
+	
+	assert(type_script is Script, "type_script script (%s) not of type Script" % type_script)
+	assert(type_script.get_global_name().is_empty(), ("type_script (%s) does not have a " + \
+	"class_name defined") % type_script)
+	
+	var config: JSONObjectConfig = impl.object_config_registry.get_config_by_class(type_script.get_global_name())
+	assert(config != null, "type_script (%s)'s class (%s) does not have a JSONObjectConfig associated with it" \
+	% [type_script, type_script.get_global_name()])
+	
+	return {
+		"i": config.id, # ID of the config, can resolve class name & base type from this
+	}
