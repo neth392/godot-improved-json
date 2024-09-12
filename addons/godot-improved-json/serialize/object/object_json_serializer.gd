@@ -22,13 +22,16 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	
 	# Iterate the properies
 	for property: JSONProperty in config.get_properties_extended():
+		# Ensure key not empty
+		assert(!property.json_key.is_empty(), "JSONProperty (%s) of JSONObjectConfig (%s) has empty json_key" \
+		% [property, config])
+		# Check for duplicate keys
+		assert(!serialized.has(property.json_key), "duplicate json_keys (%s) for JSONObjectConfig (%s)" \
+		% [property.json_key, config])
+		
 		# Skip disabled properties
 		if !property.enabled:
 			continue
-		
-		# Ensure no duplicates
-		assert(!serialized.has(property.json_key), "duplicate json_keys (%s) for object (%s)" \
-		% [property.json_key, object])
 		
 		# Check if property exists in the object
 		if property.property_name not in object:

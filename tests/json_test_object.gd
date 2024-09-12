@@ -35,3 +35,4 @@ Vector3(4.0, 5.0, 6.0)])
 var type_packed_vector4_array: PackedVector4Array = PackedVector4Array([Vector4(1.0, 2.0, 3.0, 4.0), 
 Vector4(5.0, 6.0, 7.0, 8.0)])
 var type_packed_color_array: PackedColorArray = PackedColorArray([Color.RED, Color.BLUE, Color.GREEN])
+var type_object: Object # Do not set this to prevent a stack overflow

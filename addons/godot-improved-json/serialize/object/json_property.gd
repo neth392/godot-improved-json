@@ -34,14 +34,14 @@ enum IfMissing {
 @export var allow_null: bool = true
 
 ## How to handle properties missing from an [Object] when serializing it.
-@export var if_missing_in_object_serialize: IfMissing = IfMissing.WARN_DEBUG
+@export var if_missing_in_object_serialize: IfMissing = IfMissing.ERROR_DEBUG
 
 ## How to handle properties missing from serialized json when deserialzing an Object.
-@export var if_missing_in_json: IfMissing = IfMissing.IGNORE
+@export var if_missing_in_json: IfMissing = IfMissing.ERROR_DEBUG
 
 ## How to handle properties that exist in serialized data but are missing from
 ## the [Object] being deserialized.
-@export var if_missing_in_object_deserialize: IfMissing = IfMissing.WARN_DEBUG
+@export var if_missing_in_object_deserialize: IfMissing = IfMissing.ERROR_DEBUG
 
 ## If true, this property is "deserialized into", meaning the property's existing value
 ## is passed to [method JSONSerializer._deserialize_into]. If false, a new value is constructed

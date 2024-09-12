@@ -19,7 +19,7 @@ var _ignore_setting_change: bool = false
 
 ## Constructs a new [JSONSerializationImpl] instance with support for reading errors.
 ## The returned node should NOT be added to the tree.
-func new() -> JSONSerializationImpl:
+func new_impl() -> JSONSerializationImpl:
 	var instance: JSONSerializationImpl = JSONSerializationImpl.new()
 	instance.indent = indent
 	instance.sort_keys = sort_keys
@@ -133,7 +133,7 @@ func _ready() -> void:
 	add_serializer(preload("./native/packed_byte_array_json_serializer.gd").new())
 	
 	# In editor; handle ProjectSettings for object config registry
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() && JSONSerialization == self:
 		# Create the setting if it does not exist
 		if !ProjectSettings.has_setting(_SETTING_PATH):
 			ProjectSettings.set_setting(_SETTING_PATH, _DEFAULT_REGISTRY_PATH)
@@ -188,6 +188,8 @@ func _on_file_removed(file: String) -> void:
 
 # Loads and sets the registry
 func _reload_registry(verbose: bool) -> void:
+	if JSONSerialization != self:
+		return
 	var registry: JSONObjectConfigRegistry = null
 	# File exists
 	if FileAccess.file_exists(_registry_path):
@@ -202,4 +204,4 @@ func _reload_registry(verbose: bool) -> void:
 		"setting %s points to a correct file.") \
 		% [_registry_path, _SETTING_PATH])
 	
-	JSONSerialization.object_config_registry = registry
+	object_config_registry = registry

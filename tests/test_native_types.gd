@@ -7,7 +7,7 @@ var type_params: Array[Array] = []
 func before_all():
 	var object: JSONTestObject = JSONTestObject.new()
 	for property: Dictionary in object.get_script().get_script_property_list():
-		if !property.name.begins_with("type_"):
+		if !property.name.begins_with("type_") || property.type == TYPE_OBJECT:
 			continue
 		type_params.append([property.name, object.get(property.name)])
 	object.free()

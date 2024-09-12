@@ -1,5 +1,5 @@
 ## Debug class used to test which types work with [PrimitiveJSONSerializer].
-class_name PrimitiveJSONSerializerTypeTest extends Node
+extends Node
 
 @export var script_to_test: Script
 
