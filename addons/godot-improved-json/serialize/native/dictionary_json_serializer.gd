@@ -113,6 +113,7 @@ func _deserialize_into(serialized: Variant, instance: Variant, impl: JSONSeriali
 	
 	var dict: Dictionary = serialized.d
 	for stringified_key: Variant in dict:
+		# JSON keys must be strings so we use parse instead of deserialize
 		assert(stringified_key is String, ("key (%s) not of type String " + \
 		"for serialized Dictionary (%s)") % [stringified_key, dict])
 		var key: Variant = impl.parse(stringified_key)

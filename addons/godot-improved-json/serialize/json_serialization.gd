@@ -129,6 +129,9 @@ func _ready() -> void:
 	# TYPE_PROJECTION
 	add_serializer(preload("./native/projection_json_serializer.gd").new())
 	
+	# TYPE_PACKED_BYTE_ARRAY
+	add_serializer(preload("./native/packed_byte_array_json_serializer.gd").new())
+	
 	# In editor; handle ProjectSettings for object config registry
 	if Engine.is_editor_hint():
 		# Create the setting if it does not exist

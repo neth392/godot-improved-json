@@ -21,4 +21,4 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 	assert(serialized["x"] is float, "x is not a float")
 	assert(serialized["y"] is float, "y is not a float")
 	assert(serialized["z"] is float, "z is not a float")
-	return Vector4(serialized["w"], serialized["x"], serialized["y"], serialized["z"])
+	return Vector4(serialized["x"], serialized["y"], serialized["z"], serialized["w"])

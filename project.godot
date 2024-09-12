@@ -19,4 +19,4 @@ JSONSerialization="*res://addons/godot-improved-json/serialize/json_serializatio
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-improved-json/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-improved-json/plugin.cfg", "res://addons/gut/plugin.cfg")

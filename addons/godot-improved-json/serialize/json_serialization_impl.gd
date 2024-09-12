@@ -94,7 +94,8 @@ func get_deserializer(wrapped_value: Dictionary) -> JSONSerializer:
 ## that can be safely stored via JSON & deserialized.
 func serialize(variant: Variant) -> Dictionary:
 	# str(variant) needed as some types such as RID will not work w/o it
-	assert(is_serializiable(variant), "variant (%s) not supported by any JSONSerializer" % str(variant))
+	assert(is_serializiable(variant), "variant (%s) of type (%s) not supported by any JSONSerializer" \
+	% [str(variant), typeof(variant)])
 	
 	var serializer: JSONSerializer = get_serializer_for_type(typeof(variant))
 	assert(serializer != null, "get_serializer_for_type(typeof(%s)) returned null" % str(variant))
@@ -163,13 +164,12 @@ func parse_into(instance: Variant, wrapped_json_string: String) -> void:
 
 ## Internal helper function for [method parse] and [method parse_into].
 func _parse(wrapped_json_string: String) -> Variant:
-	# TODO fix
-	return null
-	#_json.parse(wrapped_json_string, keep_text)
+	_json.parse(wrapped_json_string, keep_text)
+	# TODO better error handling?
 	#assert(error == OK, "JSON error: line=%s,message=%s" % [json.get_error_line(), json.get_error_message()])
 	#assert(json.data is Dictionary, "json.parse() result (%s) not of type Dictionary for wrapped_json_string %s"\
 	 #% [json.data, wrapped_json_string])
-	#return json.data
+	return _json.data
 
 
 ## Constructs & returns a new JSON-parsable [Dictionary] containing a "i" key
