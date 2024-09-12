@@ -16,7 +16,7 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	var serialized: Dictionary = {}
 	
 	for key: Variant in instance:
-		# NOTE: JSON keys need to be strins, so we use stringify here instead
+		# NOTE: JSON keys need to be strings, so we use stringify here instead
 		var serialized_key: String = impl.stringify(key)
 		var serialized_value: Variant = impl.serialize(instance[key])
 		
@@ -50,15 +50,60 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 	
 	var dict: Dictionary
 	
-	# 
+	# Untyped dictionary
 	if dict.k.is_empty() && dict.v.is_empty():
 		dict = {}
-	else:
+	else: # Typed dictionary
+		var key_type: Variant.Type
+		var key_class: String
+		var key_script: Script
+		if dict.k.has("t"):
+			key_type = dict.k.t
+		elif dict.k.has("c"):
+			key_type = TYPE_OBJECT
+			key_class = dict.k.c
+		elif dict.k.has("i"):
+			var config_id: StringName = StringName(dict.k.i)
+			var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(config_id)
+			assert(config != null, ("error determining dictionary key type; no JSONObjectConfig " + \
+			"found with id (%s) when deserializing dictionary (%s)") % [config_id, serialized])
+			var script: Script = config.get_class_script()
+			assert(script != null, ("error determining dictionary key type; no script found " + \
+			"for config (%s) when deserializing dictionary (%s)") % [config, serialized])
+			
+			key_type = TYPE_OBJECT
+			key_class = script.get_instance_base_type()
+			key_script = script
+		else:
+			key_type = TYPE_NIL
 		
+		var value_type: Variant.Type
+		var value_class: String
+		var value_script: Script
+		if dict.v.has("t"):
+			value_type = dict.v.t
+		elif dict.v.has("c"):
+			value_type = TYPE_OBJECT
+			value_class = dict.v.c
+		elif dict.v.has("i"):
+			var config_id: StringName = StringName(dict.v.i)
+			var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(config_id)
+			assert(config != null, ("error determining dictionary value type; no JSONObjectConfig " + \
+			"found with id (%s) when deserializing dictionary (%s)") % [config_id, serialized])
+			var script: Script = config.get_class_script()
+			assert(script != null, ("error determining dictionary value type; no script found " + \
+			"for config (%s) when deserializing dictionary (%s)") % [config, serialized])
+			value_type = TYPE_OBJECT
+			value_class = script.get_instance_base_type()
+			value_script = script
+		else:
+			value_type = TYPE_NIL
+		
+		dict = Dictionary({}, key_type, key_class, key_script, value_type, value_class, value_script)
 	
-	_deserialize_into(serialized, dictionary, impl)
+	_deserialize_into(serialized, dict, impl)
 	
-	return dictionary
+	return dict
 
 
 func _deserialize_into(serialized: Variant, instance: Variant, impl: JSONSerializationImpl) -> void:
