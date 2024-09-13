@@ -1,12 +1,20 @@
 extends GutTest
 
+var impl: JSONSerializationImpl
 var object: JSONTestObjectExtended
 var properties_to_test: Array[Array] = []
 var properties_to_test_names: PackedStringArray = PackedStringArray()
 var deserialized: Object 
 
 func before_all() -> void:
-	JSONSerialization.object_config_registry = JSONObjectConfigRegistry.new()
+	# Create a new impl to use
+	impl = JSONSerialization.new_impl()
+	# Change these default values to preserve ordering
+	impl.sort_keys = false
+	impl.full_precision = true 
+	
+	# Give it a new registry for these tests
+	impl.object_config_registry = JSONObjectConfigRegistry.new()
 	
 	# Create JSONObjectConfig
 	var config: JSONObjectConfig = JSONObjectConfig.new()
@@ -33,7 +41,7 @@ func before_all() -> void:
 		properties_to_test_names.append(json_property.property_name)
 	
 	# Add config to global instance
-	JSONSerialization.object_config_registry.add_config(config)
+	impl.object_config_registry.add_config(config)
 	
 	# Create extended config
 	var extended_config: JSONObjectConfig = JSONObjectConfig.new()
@@ -62,20 +70,21 @@ func before_all() -> void:
 	extended_config.instantiator.gd_script = extended_gd_script
 	
 	# Add extended to global instance
-	JSONSerialization.object_config_registry.add_config(extended_config)
+	impl.object_config_registry.add_config(extended_config)
 	
 	# Create & set object
 	object = JSONTestObjectExtended.new()
 	
 	# Register properties to test in param array
-	for property: JSONProperty in JSONSerialization.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")\
+	for property: JSONProperty in impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")\
 	.get_properties_extended():
 		properties_to_test.append([property])
 
 
 func after_all() -> void:
-	# Reset config registry
-	JSONSerialization.object_config_registry = JSONObjectConfigRegistry.new()
+	# Get rid of impl
+	impl.queue_free()
+	impl = null
 	# Clear objects
 	object = null
 	deserialized = null
@@ -83,24 +92,27 @@ func after_all() -> void:
 	properties_to_test.clear()
 
 
+func test_assert_impl_not_null() -> void:
+	assert_not_null(impl, "impl is null")
+
+
 func test_assert_registry_not_null() -> void:
-	assert_not_null(JSONSerialization.object_config_registry, 
-	"JSONSerialization.object_config_registry is null")
+	assert_not_null(impl.object_config_registry, "impl.object_config_registry is null")
 
 
 func test_assert_config_exists() -> void:
-	assert_not_null(JSONSerialization.object_config_registry.get_config_by_id(&"JSONTestObject"),
-	"Config ID 'JSONTestObject' does not exist in JSONSerialization.object_config_registry")
+	assert_not_null(impl.object_config_registry.get_config_by_id(&"JSONTestObject"),
+	"Config ID 'JSONTestObject' does not exist in impl.object_config_registry")
 
 
 func test_assert_extended_config_exists() -> void:
-	assert_not_null(JSONSerialization.object_config_registry.get_config_by_id(&"JSONTestObjectExtended"),
-	"Config ID 'JSONTestObjectExtended' does not exist in JSONSerialization.object_config_registry")
+	assert_not_null(impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended"),
+	"Config ID 'JSONTestObjectExtended' does not exist in impl.object_config_registry")
 
 
 func test_assert_extended_config_has_parent_properties() -> void:
 	# Get config
-	var config: JSONObjectConfig = JSONSerialization.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")
+	var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")
 	# Create array of property names to test for
 	var property_names: PackedStringArray = PackedStringArray()
 	for json_property: JSONProperty in config.get_properties_extended():
@@ -114,12 +126,12 @@ func test_assert_extended_config_has_parent_properties() -> void:
 
 
 func test_assert_is_serializable() -> void:
-	assert_true(JSONSerialization.is_serializiable(object), "JSONTestObject is not serializable")
+	assert_true(impl.is_serializiable(object), "JSONTestObject is not serializable")
 
 
 func test_deserialized_is_correct_object() -> void:
-	var serialized: String = JSONSerialization.stringify(object)
-	deserialized = JSONSerialization.parse(serialized)
+	var serialized: String = impl.stringify(object)
+	deserialized = impl.parse(serialized)
 	assert_typeof(deserialized, TYPE_OBJECT, "deserialized type (%s) not of TYPE_OBJECT" \
 	% typeof(deserialized))
 	assert_is(deserialized, JSONTestObjectExtended, "deserialized not of type JSONTestObjectExtended")

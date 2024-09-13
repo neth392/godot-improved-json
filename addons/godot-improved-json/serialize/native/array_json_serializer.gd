@@ -72,5 +72,5 @@ func _deserialize_into(serialized: Variant, instance: Variant, impl: JSONSeriali
 	var elements: Array = serialized if serialized is Array else serialized.a
 	
 	for serialized_element: Variant in elements:
-		var deserialized: Variant = JSONSerialization.deserialize(serialized_element)
+		var deserialized: Variant = impl.deserialize(serialized_element)
 		instance.append(deserialized)
