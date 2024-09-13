@@ -13,8 +13,8 @@ Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless metho
 - [Basic Usage](#Basic-Usage)
 - [Object Serialization](#Object-Serialization)
 - [Examples](./examples/)
-	- [Basic](#./examples/basic)
-	- [Custom Object](./examples/object)
+	- [Basic](examples/basic)
+	- [Custom Object](examples/object)
 
 ## FAQ
 - **Will versions earlier than Godot 4.4 be supported?** No
