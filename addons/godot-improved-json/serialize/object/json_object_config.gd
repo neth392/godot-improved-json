@@ -23,6 +23,8 @@ class_name JSONObjectConfig extends Resource
 			for_class = set_for_class_by_script.get_global_name()
 		else:
 			for_class = value
+		if Engine.is_editor_hint() && id.is_empty() && !for_class.is_empty():
+			id = for_class
 		_editor_update()
 	get():
 		if set_for_class_by_script != null && !set_for_class_by_script.get_global_name().is_empty():

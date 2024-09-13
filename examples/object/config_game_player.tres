@@ -1,0 +1,60 @@
+[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=11 format=3 uid="uid://k2xrlnw77n1f"]
+
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_property.gd" id="1_pvxtm"]
+[ext_resource type="PackedScene" uid="uid://bvxexukoy0krl" path="res://examples/object/game_player.tscn" id="1_vfo0r"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="2_4ymdh"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/instantiator/json_scene_instantiator.gd" id="2_ex7bg"]
+[ext_resource type="Script" path="res://examples/object/game_player.gd" id="3_neu3v"]
+
+[sub_resource type="Resource" id="Resource_ytwqe"]
+script = ExtResource("2_ex7bg")
+scene = ExtResource("1_vfo0r")
+
+[sub_resource type="Resource" id="Resource_4e2ff"]
+script = ExtResource("1_pvxtm")
+json_key = &"player_name"
+property_name = "player_name"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+
+[sub_resource type="Resource" id="Resource_b4m0p"]
+script = ExtResource("1_pvxtm")
+json_key = &"player_color"
+property_name = "player_color"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+
+[sub_resource type="Resource" id="Resource_yibk8"]
+script = ExtResource("1_pvxtm")
+json_key = &"items"
+property_name = "items"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+deserialize_into = false
+
+[sub_resource type="Resource" id="Resource_tgoo3"]
+script = ExtResource("1_pvxtm")
+json_key = &"position"
+property_name = "position"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+
+[resource]
+script = ExtResource("2_4ymdh")
+id = &"GamePlayer"
+for_class = "GamePlayer"
+set_for_class_by_script = ExtResource("3_neu3v")
+instantiator = SubResource("Resource_ytwqe")
+properties = Array[ExtResource("1_pvxtm")]([SubResource("Resource_4e2ff"), SubResource("Resource_b4m0p"), SubResource("Resource_yibk8"), SubResource("Resource_tgoo3")])

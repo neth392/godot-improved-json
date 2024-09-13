@@ -21,6 +21,8 @@ enum IfMissing {
 @export var property_name: String:
 	set(value):
 		property_name = value
+		if Engine.is_editor_hint() && json_key.is_empty() && !property_name.is_empty():
+			json_key = property_name
 		notify_property_list_changed()
 
 @export_group("Advanced")

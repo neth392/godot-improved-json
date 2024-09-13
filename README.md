@@ -5,12 +5,17 @@
 Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless methods of serializing any variant, including Objects and their properties.
 
 ## Table of Contents
+- [FAQ](#FAQ)
 - [Why?](#Why)
 - [Support Links](#Support-Links)
 - [Installation](#Installation)
 - [Limitations](#Limitations)
 - [Basic Usage](#Basic-Usage)
 - [Object Serialization](#Object-Serialization)
+
+
+## FAQ
+- **Will versions earlier than Godot 4.4 be supported?** No
 
 ## Why?
 Originally this project was created to bring JSON support to all of Godot's native types, including Objects & their properties. But with [Godot 4.4-dev2](https://godotengine.org/article/dev-snapshot-godot-4-4-dev-2/)'s release, [this commit](https://github.com/godotengine/godot/pull/92656) was merged doing just that. However, after testing the new changes there were still issues that this project solves, predominantly in regards to Objects.
@@ -21,7 +26,6 @@ The current issues with Godot's new JSON changes that this project addresses are
 - A lot of internal properties that you don't need serialized are included Godot's `JSON.to_native` function. With this project, you tell the system what should be serialized. This tremendously cuts down the file sizes and speeds up load times. But most importantly it ensures your saving & loading behave how *you* want it to.
 - Godot 4.4's new `JSON.from_native()` method returns a Dictionary that contains fully spelled out keys such as `__gdtype` for the `Variant.Type`, `basis` and `origin` for `Transform3D`'s values, & more. Improved Godot JSON uses short, one character keys. Again, this increases efficiency and reduces file size, which can add up when dealing with larger JSON files.
 
-
 ## Support Links
 For now, message me on Discord for direct support: cneth
 
@@ -30,6 +34,7 @@ TODO
 
 ## Limitations
 - Serialized objects **must** have an explicit `class_name` defined in their script.
+- If a custom object has a constructor, it **must have default values for each parameter** unless you use `JSONSerialization.parse_into(object)` (which does not construct a new instance of an object). If a constructor does not have default parameters, an error explaining such will be thrown when you try to deserialize an instance of it.
 - Nested/inner classes are **not supported**
 - A `JSONObjectConfigRegistry` file somewhere in the project directory is **required**. Object serialization will not work without it, but the addon *shouldn't* break completely.
 - `TYPE_CALLABLE`, `TYPE_SIGNAL`, `TYPE_RID`, & `TYPE_MAX`  are **not supported**.

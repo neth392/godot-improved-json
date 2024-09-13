@@ -5,7 +5,8 @@ class_name JSONSerializationImpl extends Node
 
 ## Parameter used in [method JSON.stringify]
 @export_storage var indent: String = ""
-## Parameter used in [method JSON.stringify]
+## Parameter used in [method JSON.stringify]. Important to set to false if you want to
+## preserve serialized [Dictionary] order.
 @export_storage var sort_keys: bool = true
 ## Parameter used in [method JSON.stringify]
 @export_storage var full_precision: bool = false

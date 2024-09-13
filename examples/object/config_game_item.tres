@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=3 format=3 uid="uid://ckyyypvht0nmc"]
+
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_property.gd" id="1_addpr"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="2_4h780"]
+
+[resource]
+script = ExtResource("2_4h780")
+id = &""
+for_class = ""
+properties = Array[ExtResource("1_addpr")]([])
