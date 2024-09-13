@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="JSONObjectConfigRegistry" load_steps=3 format=3 uid="uid://wkp4jltl3gd4"]
-
-[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="1_1a4xa"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config_registry.gd" id="2_rihnx"]
-
-[resource]
-script = ExtResource("2_rihnx")
-_user_configs = Array[ExtResource("1_1a4xa")]([])

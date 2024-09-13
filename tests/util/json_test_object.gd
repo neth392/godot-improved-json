@@ -1,5 +1,9 @@
 ## Object used in Gut tests.
-class_name JSONTestObject extends Object
+## Most properties here should account for testing of every possible type, except objects.
+## For objects, see [JSONTestObjectExtended]
+class_name JSONTestObject extends RefCounted
+
+const PROPERTY_PREFIX: String = "type_"
 
 var type_bool: bool = true
 var type_int: int = 42
@@ -34,5 +38,12 @@ var type_packed_vector3_array: PackedVector3Array = PackedVector3Array([Vector3(
 Vector3(4.0, 5.0, 6.0)])
 var type_packed_vector4_array: PackedVector4Array = PackedVector4Array([Vector4(1.0, 2.0, 3.0, 4.0), 
 Vector4(5.0, 6.0, 7.0, 8.0)])
-var type_packed_color_array: PackedColorArray = PackedColorArray([Color.RED, Color.BLUE, Color.GREEN])
-var type_object: Object # Do not set this to prevent a stack overflow
+var type_packed_color_array: PackedColorArray = PackedColorArray([Color.RED, Color.ORANGE, 
+Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE])
+var type_int_array_of_ints: Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+var type_array_of_random_arrays: Array[Array] = [[1, 2, 3, 4, 5, 6], ["hi!", "hello!", "test"], 
+[2.0, 1, Vector2(1.0, 2.0)], ["string", 1.0, 2, true, NodePath("/root/Node/AnotherNode")]]
+var type_untyped_dictionary: Dictionary = {"yo": Vector3(1.0,2.0,3.0), 2: -4.0, Color.RED: false}
+var type_typed_dictionary: Dictionary[String, float] = {"1": 1, "2": 2.0, "3": 3.1}
+var type_key_typed_dictionary: Dictionary[int, Variant] = {1: true, 2: "false", 3: 20, 4: Color.MAGENTA}
+var type_value_typed_dictionary: Dictionary[Variant, float] = {false: 1, 5.0: 2.0, "true": 3.0, Vector4(1.0,2.0,3,4): 4.0}

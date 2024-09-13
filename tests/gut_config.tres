@@ -1,0 +1,32 @@
+{
+ "font_name": "CourierPrime",
+ "font_color": "ccccccff",
+ "background_color": "262626ff",
+ "prefix": "test_",
+ "suffix": ".gd",
+ "opacity": 100,
+ "font_size": 13,
+ "dirs": [
+  "res://tests"
+ ],
+ "hide_orphans": false,
+ "gut_on_top": true,
+ "errors_do_not_cause_failure": false,
+ "should_exit": false,
+ "should_exit_on_success": false,
+ "ignore_pause": false,
+ "should_maximize": false,
+ "compact_mode": false,
+ "disable_colors": true,
+ "include_subdirs": true,
+ "configured_dirs": [
+  "res://tests"
+ ],
+ "double_strategy": 1,
+ "log_level": 1,
+ "pre_run_script": "",
+ "post_run_script": "",
+ "junit_xml_file": "",
+ "paint_after": 0.1,
+ "junit_xml_timestamp": false
+}
