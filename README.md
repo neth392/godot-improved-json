@@ -3,6 +3,7 @@
 ![Godot-JSON Icon](icon.svg)
 
 Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless methods of serializing any variant, including Objects and their properties.
+<br>  
 
 ## Table of Contents
 - [FAQ](#FAQ)
@@ -29,16 +30,19 @@ The current issues with Godot's new JSON changes that this project addresses are
 - JSON Object support for custom objects in native Godot is still questionable, and currently appears broken. In the above point, if `variant` were to be an instance of `MyCustomClass`, when you deserialize it you will not receive an instance of `MyCustomClass`, just an instance of its base type (such as Resource). There is no property way to simply convert your objects to JSON & back without your own boilerplate, which this project aims to eliminate.
 - A lot of internal properties that you don't need serialized are included Godot's `JSON.to_native` function. With this project, you tell the system what should be serialized. This tremendously cuts down the file sizes and speeds up load times. But most importantly it ensures your saving & loading behave how *you* want it to.
 - Godot 4.4's new `JSON.from_native()` method returns a Dictionary that contains fully spelled out keys such as `__gdtype` for the `Variant.Type`, `basis` and `origin` for `Transform3D`'s values, & more. Improved Godot JSON uses short, one character keys. Again, this increases efficiency and reduces file size, which can add up when dealing with larger JSON files.
+
 <br>  
 
 ## Support Links
 For now, message me on Discord for direct support: cneth
+
 <br>  
 
 ## Installation
 TODO
-<br>  
-
+ 
+ <br>  
+ 
 ## Limitations
 - Serialized objects **must** have an explicit `class_name` defined in their script.
 - If a custom object has a constructor, it **must have default values for each parameter** unless you use `JSONSerialization.parse_into(object)` (which does not construct a new instance of an object). If a constructor does not have default parameters, an error explaining such will be thrown when you try to deserialize an instance of it.
@@ -46,7 +50,9 @@ TODO
 - A `JSONObjectConfigRegistry` file somewhere in the project directory is **required**. Object serialization will not work without it, but the addon *shouldn't* break completely.
 - `TYPE_CALLABLE`, `TYPE_SIGNAL`, `TYPE_RID`, & `TYPE_MAX`  are **not supported**.
 - There is currently a bug that causes the `JSONSerialization` autoload to have it's `_ready()` function called twice in the editor when the project is opened. I have tried everything to fix this and I can not figure it out. This shouldn't noticeably impact anything.
-<br>
+
+<br>  
+
 ## Basic Usage
 
 TODO
