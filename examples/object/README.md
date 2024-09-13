@@ -74,7 +74,7 @@ For this class's properties we just want `contents`, added the same way as all o
 
 ### Registering JSONObjectConfigs
 The most important part is to remember to add these new config files to your JSONObjectConfigRegistry resource's `user_configs` array property, gone over in the [main README](../README.md). If you forget, it will not work. You *can* also do what I did in this example (as I don't have any registry file set for this project) and manually add them each time your game starts up via `JSONSerialization.object_config_registry.add_config(config)`, but that isn't recommended.
-<br>
+<br><br>
 
 ## Wrapping it all up
 Check out the code & comments in [object_example.gd](object_example.gd) to see how this now ties into saving & loading. A lot easier to see the code in action with explanations than it is to read another wall of text here.
