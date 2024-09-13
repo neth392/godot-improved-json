@@ -78,3 +78,6 @@ The most important part is to remember to add these new config files to your JSO
 
 ## Wrapping it all up
 Check out the code & comments in [object_example.gd](object_example.gd) to see how this now ties into saving & loading. A lot easier to see the code in action with explanations than it is to read another wall of text here.
+
+<br><br>
+[Back to Top ↑](#Godot-Improved-JSON)
