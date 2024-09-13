@@ -21,8 +21,8 @@ This page will walk you through how the object example works & was made. This is
 A few objects I've created for this example are used, see their explanations below. Think of them as objects in your existing game.
 
 ### GamePlayer
-[game_player.gd](game_player.gd)
-[game_player.tscn](game_player.tscn)
+[game_player.gd](game_player.gd)<br>
+[game_player.tscn](game_player.tscn)<br>
 This class stores some common player information. It extends `Node2D` so we also have access to all of those properties.
 
 ### GameItem
