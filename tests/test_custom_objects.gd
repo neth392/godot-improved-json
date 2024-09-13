@@ -2,6 +2,7 @@ extends GutTest
 
 var object: JSONTestObjectExtended
 var properties_to_test: Array[Array] = []
+var properties_to_test_names: PackedStringArray = PackedStringArray()
 var deserialized: Object 
 
 func before_all() -> void:
@@ -29,6 +30,7 @@ func before_all() -> void:
 		json_property.json_key = "key_" + property.name
 		json_property.property_name = property.name
 		config.properties.append(json_property)
+		properties_to_test_names.append(json_property.property_name)
 	
 	# Add config to global instance
 	JSONSerialization.object_config_registry.add_config(config)
@@ -38,7 +40,7 @@ func before_all() -> void:
 	extended_config.id = &"JSONTestObjectExtended"
 	
 	# Set original config to extend this one
-	config.extend_other_config = extended_config
+	extended_config.extend_other_config = config
 	
 	# Load script & set it
 	var extended_gd_script: GDScript = preload("./util/json_test_object_extended.gd") as GDScript
@@ -53,6 +55,7 @@ func before_all() -> void:
 		json_property.json_key = "key_" + property.name
 		json_property.property_name = property.name
 		extended_config.properties.append(json_property)
+		properties_to_test_names.append(json_property.property_name)
 	
 	# Create & set extended instantiator
 	extended_config.instantiator = JSONScriptInstantiator.new()
@@ -106,8 +109,8 @@ func test_assert_extended_config_has_parent_properties() -> void:
 	for property: Dictionary in load("res://tests/util/json_test_object.gd").get_script_property_list():
 		if !property.name.begins_with(JSONTestObject.PROPERTY_PREFIX):
 			continue
-		assert_has(property_names, property.name, ("JSONTestObject (parent) property (%s) missing from congig %s" + \
-		".get_properties_extended()") % [config, property.name])
+		assert_has(property_names, property.name, ("JSONTestObject (parent) property (%s)" + \
+		" missing from config %s.get_properties_extended()") % [property.name, config])
 
 
 func test_assert_is_serializable() -> void:
@@ -131,7 +134,101 @@ func test_assert_property_deserialized_equals_original(params = use_parameters(p
 	
 	var original_value: Variant = object.get(json_property.property_name)
 	var deserialized_value: Variant = deserialized.get(json_property.property_name)
-	if original_value is Object:
-		pass
+	var result: String = _deep_compare(original_value, deserialized)
+	assert_true(result.is_empty(), ("property (%s): deserialized value " + \
+	"is (%s) not equal to the original value (%s)\ncause=%s") \
+	% [json_property.property_name, deserialized_value, original_value, result])
+
+# Below is custom comparator logic to help isolate which property is not correct
+# and why. It searches deep into objects (& arrays/dictionarys who have objects)
+# and returns the root reason that caused the variants to not be equal
+
+func _deep_compare(original: Variant, deserialized: Variant) -> String:
+	if original is Object:
+		return _deep_compare_object(original, deserialized)
+	elif original is Array:
+		return _deep_compare_array(original, deserialized)
+	elif original is Dictionary:
+		return _deep_compare_dictionary(original, deserialized)
+	elif typeof(original) != typeof(deserialized):
+			return "type of original (%s) != type of deserialized (%s)" \
+			% [JSONTestUtil.get_type_of(original), JSONTestUtil.get_type_of(deserialized)]
+	elif original != deserialized:
+		return "natives not equal (original == deserialized returned false)"
 	else:
-		assert_eq()
+		return ""
+
+
+func _deep_compare_array(original: Array, deserialized: Variant) -> String:
+	if deserialized is not Array:
+		return "deserialized not of type Array"
+	if original.size() != deserialized.size():
+		return "array size mismatch, original=%s, deserialized=%s" % [original.size(), deserialized.size()]
+	
+	for index: int in original.size():
+		var original_element: Variant = original[index]
+		var deserialized_element: Variant = deserialized[index]
+		var result: String = _deep_compare(original_element, deserialized_element)
+		if !result.is_empty():
+			return ("elements != @ index (%s) for original element (%s) & deserialized " + \
+			"element (%s)\ncause=%s") % [index, original_element, deserialized_element, result]
+	
+	return ""
+
+
+func _deep_compare_dictionary(original: Dictionary, deserialized: Variant) -> String:
+	if deserialized is not Dictionary:
+		return "deserialized not of type Dictionary"
+	if original.size() != deserialized.size():
+		return "dictionary size mismatch, original=%s, deserialized=%s" \
+		% [original.size(), deserialized.size()]
+	
+	var original_keys: Array = original.keys()
+	var deserialized_keys: Array = deserialized.keys()
+	for index: int in original_keys.size():
+		var original_key: Variant = original_keys[index]
+		var deserialized_key: Variant = deserialized_keys[index]
+		var key_result: String = _deep_compare(original_key, deserialized_key)
+		if !key_result.is_empty():
+			return ("keys != @ index (%s) for original key (%s) & deserialized " + \
+			"key (%s)\ncause=%s") % [index, original_key, deserialized_key, key_result]
+		
+		var original_value: Variant = original[original_key]
+		var deserialized_value: Variant = deserialized[deserialized_key]
+		var value_result: String = _deep_compare(original_value, deserialized_value)
+		if !value_result.is_empty():
+			return ("values != @ index (%s) for original value (%s) & deserialized " + \
+			"value (%s) of key (%s)\ncause=%s") \
+			% [index, original_key, deserialized_key, original_key, key_result]
+	
+	return ""
+
+# Only supports JSONTestObjectExtended
+func _deep_compare_object(original: Object, deserialized: Variant) -> String:
+	if deserialized is not Object:
+		return "deserialized not of type Object"
+	
+	var original_class: String = GodotJSONUtil.get_class_name(original)
+	var deserialized_class: String = GodotJSONUtil.get_class_name(deserialized)
+	if original_class != deserialized_class:
+		return "deserialized class (%s) != original class (%s)" % [original_class, deserialized_class]
+	
+	if original.get_script() != deserialized.get_script():
+		return "deserialized script (%s) != original script (%s)" \
+		% [original.get_script(), deserialized.get_script()]
+	
+	for property: Dictionary in original.get_property_list():
+		if !properties_to_test_names.has(property.name):
+			continue
+		if property.name not in deserialized:
+			return "property (%s) not found in deserialized (%s) but present in original (%s)" \
+			% [property.name, deserialized, original]
+		var original_value: Variant = original.get(property.name)
+		var deserialized_value: Variant = deserialized.get(property.name)
+		var result: String = _deep_compare(original_value, deserialized_value)
+		if !result.is_empty():
+			return ("property values != for property (%s) original value=(%s), " + \
+			"deserialized value= (%s)\ncause=%s") \
+			% [property.name, original_value, deserialized_value, result]
+	
+	return ""

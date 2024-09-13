@@ -35,11 +35,14 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 		
 		# Check if property exists in the object
 		if property.property_name not in object:
+			print("")
 			match property.if_missing_in_object_serialize:
 				JSONProperty.IfMissing.WARN_DEBUG:
-					push_warning("property (%s) missing in object (%s)" % [property, object])
+					push_warning("property (%s) missing in object (%s) of class (%s)" \
+					% [property, object, GodotJSONUtil.get_class_name(object)])
 				JSONProperty.IfMissing.ERROR_DEBUG:
-					assert(false, "property (%s) missing in object (%s)" % [property, object])
+					assert(false, "property (%s) missing in object (%s) of class (%s)" \
+					% [property, object, GodotJSONUtil.get_class_name(object)])
 			continue
 		
 		var value: Variant = object.get(property.property_name)

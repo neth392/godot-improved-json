@@ -51,19 +51,19 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 	var dict: Dictionary
 	
 	# Untyped dictionary
-	if dict.k.is_empty() && dict.v.is_empty():
+	if serialized.k.is_empty() && serialized.v.is_empty():
 		dict = {}
 	else: # Typed dictionary
 		var key_type: Variant.Type
-		var key_class: String
+		var key_class: StringName
 		var key_script: Script
-		if dict.k.has("t"):
-			key_type = dict.k.t
-		elif dict.k.has("c"):
+		if serialized.k.has("t"):
+			key_type = serialized.k.t
+		elif serialized.k.has("c"):
 			key_type = TYPE_OBJECT
-			key_class = dict.k.c
-		elif dict.k.has("i"):
-			var config_id: StringName = StringName(dict.k.i)
+			key_class = serialized.k.c
+		elif serialized.k.has("i"):
+			var config_id: StringName = StringName(serialized.k.i)
 			var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(config_id)
 			assert(config != null, ("error determining dictionary key type; no JSONObjectConfig " + \
 			"found with id (%s) when deserializing dictionary (%s)") % [config_id, serialized])
@@ -78,15 +78,15 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 			key_type = TYPE_NIL
 		
 		var value_type: Variant.Type
-		var value_class: String
+		var value_class: StringName
 		var value_script: Script
-		if dict.v.has("t"):
-			value_type = dict.v.t
-		elif dict.v.has("c"):
+		if serialized.v.has("t"):
+			value_type = serialized.v.t
+		elif serialized.v.has("c"):
 			value_type = TYPE_OBJECT
-			value_class = dict.v.c
-		elif dict.v.has("i"):
-			var config_id: StringName = StringName(dict.v.i)
+			value_class = serialized.v.c
+		elif serialized.v.has("i"):
+			var config_id: StringName = StringName(serialized.v.i)
 			var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(config_id)
 			assert(config != null, ("error determining dictionary value type; no JSONObjectConfig " + \
 			"found with id (%s) when deserializing dictionary (%s)") % [config_id, serialized])

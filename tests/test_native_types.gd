@@ -3,14 +3,12 @@ extends GutTest
 
 var type_params: Array[Array] = []
 
-
 func before_all():
 	var object: JSONTestObject = JSONTestObject.new()
 	for property: Dictionary in object.get_script().get_script_property_list():
 		if !property.name.begins_with(JSONTestObject.PROPERTY_PREFIX) || property.type == TYPE_OBJECT:
 			continue
 		type_params.append([property.name, object.get(property.name)])
-	object.free()
 
 
 func test_assert_property_not_null(params: Array = use_parameters(type_params)) -> void:

@@ -55,7 +55,8 @@ type_class: StringName, type_script: Script) -> Dictionary:
 		}
 	
 	# Make sure the class exists (no reason it shouldn't)
-	assert(!type_class.is_empty(), "type_class (%s) is empty" % type_class)
+	assert(!type_class.is_empty(), ("type_class is empty, other params: type=%s, type_script=%s")\
+	 % [type, type_script])
 	
 	# For built in objects, we can just return the class name. Those won't change, and if the do
 	# then other parts of projects will break too (not our problem to worry about)
@@ -69,8 +70,8 @@ type_class: StringName, type_script: Script) -> Dictionary:
 	# for elements to be serialized anyways, so if it doesn't an error will be thrown.
 	
 	assert(type_script is Script, "type_script script (%s) not of type Script" % type_script)
-	assert(type_script.get_global_name().is_empty(), ("type_script (%s) does not have a " + \
-	"class_name defined") % type_script)
+	assert(!type_script.get_global_name().is_empty(), ("type_script (%s) does not have a " + \
+	"class_name defined, type_script.path=%s") % [type_script, type_script.resource_path])
 	
 	var config: JSONObjectConfig = impl.object_config_registry.get_config_by_class(type_script.get_global_name())
 	assert(config != null, "type_script (%s)'s class (%s) does not have a JSONObjectConfig associated with it" \
