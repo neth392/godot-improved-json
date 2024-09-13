@@ -156,15 +156,15 @@ func test_assert_property_deserialized_equals_original(params = use_parameters(p
 # and returns the root reason that caused the variants to not be equal
 
 func _deep_compare(original: Variant, deserialized: Variant) -> String:
-	if original is Object:
+	if typeof(original) != typeof(deserialized):
+			return "type of original (%s) != type of deserialized (%s)" \
+			% [JSONTestUtil.get_type_of(original), JSONTestUtil.get_type_of(deserialized)]
+	elif original is Object:
 		return _deep_compare_object(original, deserialized)
 	elif original is Array:
 		return _deep_compare_array(original, deserialized)
 	elif original is Dictionary:
 		return _deep_compare_dictionary(original, deserialized)
-	elif typeof(original) != typeof(deserialized):
-			return "type of original (%s) != type of deserialized (%s)" \
-			% [JSONTestUtil.get_type_of(original), JSONTestUtil.get_type_of(deserialized)]
 	elif original != deserialized:
 		return "natives not equal (original == deserialized returned false)"
 	else:
@@ -175,7 +175,7 @@ func _deep_compare_array(original: Array, deserialized: Variant) -> String:
 	if deserialized is not Array:
 		return "deserialized not of type Array"
 	if original.size() != deserialized.size():
-		return "array size mismatch, original=%s, deserialized=%s" % [original.size(), deserialized.size()]
+		return "array size mismatch: original=%s, deserialized=%s" % [original.size(), deserialized.size()]
 	
 	for index: int in original.size():
 		var original_element: Variant = original[index]
@@ -192,7 +192,7 @@ func _deep_compare_dictionary(original: Dictionary, deserialized: Variant) -> St
 	if deserialized is not Dictionary:
 		return "deserialized not of type Dictionary"
 	if original.size() != deserialized.size():
-		return "dictionary size mismatch, original=%s, deserialized=%s" \
+		return "dictionary size mismatch: original=%s, deserialized=%s" \
 		% [original.size(), deserialized.size()]
 	
 	var original_keys: Array = original.keys()
