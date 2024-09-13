@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=8 format=3 uid="uid://cry1dsfofpfxc"]
+
+[ext_resource type="Resource" uid="uid://ckyyypvht0nmc" path="res://examples/object/config_game_item.tres" id="1_5f6mq"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_property.gd" id="1_uf6u4"]
+[ext_resource type="Script" path="res://examples/object/game_item_chest.gd" id="1_v0cqo"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="2_24t8j"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/instantiator/json_script_instantiator.gd" id="2_271ff"]
+
+[sub_resource type="Resource" id="Resource_b58ea"]
+script = ExtResource("2_271ff")
+gd_script = ExtResource("1_v0cqo")
+
+[sub_resource type="Resource" id="Resource_y76ly"]
+script = ExtResource("1_uf6u4")
+json_key = &"contents"
+property_name = "contents"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+deserialize_into = false
+
+[resource]
+script = ExtResource("2_24t8j")
+id = &"GameItemChest"
+for_class = "GameItemChest"
+set_for_class_by_script = ExtResource("1_v0cqo")
+instantiator = SubResource("Resource_b58ea")
+extend_other_config = ExtResource("1_5f6mq")
+properties = Array[ExtResource("1_uf6u4")]([SubResource("Resource_y76ly")])

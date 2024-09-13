@@ -1,10 +1,48 @@
-[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=3 format=3 uid="uid://ckyyypvht0nmc"]
+[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=9 format=3 uid="uid://ckyyypvht0nmc"]
 
 [ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_property.gd" id="1_addpr"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/instantiator/json_script_instantiator.gd" id="1_vbt7v"]
 [ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="2_4h780"]
+[ext_resource type="Script" path="res://examples/object/game_item.gd" id="4_3ofq5"]
+
+[sub_resource type="Resource" id="Resource_r3fsf"]
+script = ExtResource("1_vbt7v")
+gd_script = ExtResource("4_3ofq5")
+
+[sub_resource type="Resource" id="Resource_aibtc"]
+script = ExtResource("1_addpr")
+json_key = &"name"
+property_name = "name"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+
+[sub_resource type="Resource" id="Resource_a4kts"]
+script = ExtResource("1_addpr")
+json_key = &"durability"
+property_name = "durability"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+
+[sub_resource type="Resource" id="Resource_8rpby"]
+script = ExtResource("1_addpr")
+json_key = &"level"
+property_name = "level"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
 
 [resource]
 script = ExtResource("2_4h780")
-id = &""
-for_class = ""
-properties = Array[ExtResource("1_addpr")]([])
+id = &"GameItem"
+for_class = "GameItem"
+set_for_class_by_script = ExtResource("4_3ofq5")
+instantiator = SubResource("Resource_r3fsf")
+properties = Array[ExtResource("1_addpr")]([SubResource("Resource_aibtc"), SubResource("Resource_a4kts"), SubResource("Resource_8rpby")])
