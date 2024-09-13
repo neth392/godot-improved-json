@@ -134,7 +134,7 @@ func test_assert_property_deserialized_equals_original(params = use_parameters(p
 	
 	var original_value: Variant = object.get(json_property.property_name)
 	var deserialized_value: Variant = deserialized.get(json_property.property_name)
-	var result: String = _deep_compare(original_value, deserialized)
+	var result: String = _deep_compare(original_value, deserialized_value)
 	assert_true(result.is_empty(), ("property (%s): deserialized value " + \
 	"is (%s) not equal to the original value (%s)\ncause=%s") \
 	% [json_property.property_name, deserialized_value, original_value, result])
