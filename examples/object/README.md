@@ -21,21 +21,20 @@ This page will walk you through how the object example works & was made. This is
 A few objects I've created for this example are used, see their explanations below. Think of them as objects in your existing game.
 
 ### GamePlayer
+This class stores some common player information. It extends `Node2D` so we also have access to all of those properties.<br>
 [game_player.gd](game_player.gd)<br>
 [game_player.tscn](game_player.tscn)<br>
-This class stores some common player information. It extends `Node2D` so we also have access to all of those properties.
 
 ### GameItem
-[game_item.gd](game_item.gd)
-This class is a `Resource` used to store information on an "item".
+This class is a `Resource` used to store information on an "item".<br>
+[game_item.gd](game_item.gd)<br>
 
 ### GameItemChest
-[chest_game_item.gd](chest_game_item.gd)
-This extends `GameItem` (which is very important to remember for later) and adds a new property, `items` which is an array of `GameItem`s representing the chest's contents.
-
+This extends `GameItem` (which is very important to remember for later) and adds a new property, `items` which is an array of `GameItem`s representing the chest's contents.<br>
+[chest_game_item.gd](chest_game_item.gd)<br>
 
 ## Implementing JSON Serialization
-Here's how I've made it so my objects & their properties can be serialized. Not going to include anything on saving the generated JSON String to a file & loading it, that's not within the scope of this project.
+Here's how I've made it so my objects & their properties can be serialized. Not going to include anything on saving the generated JSON String to a file & loading it, that's not within the scope of this project.<br>
 
 
 ### Creating JSONObjectConfigs
