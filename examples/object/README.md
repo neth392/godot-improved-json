@@ -15,7 +15,7 @@ This page will walk you through how the object example works & was made. This is
 	- [Registering JSONObjectConfigs](#Registering-JSONObjectConfigs)
 - [Wrapping it all up](#Wrapping-it-all-up)
 
-
+<br><br>
 
 ## The Data Objects
 A few objects I've created for this example are used, see their explanations below. Think of them as objects in your existing game.
@@ -31,7 +31,7 @@ This class is a `Resource` used to store information on an "item".<br>
 
 ### GameItemChest
 This extends `GameItem` (which is very important to remember for later) and adds a new property, `items` which is an array of `GameItem`s representing the chest's contents.<br>
-[chest_game_item.gd](chest_game_item.gd)<br>
+[chest_game_item.gd](chest_game_item.gd)<br><br>
 
 ## Implementing JSON Serialization
 Here's how I've made it so my objects & their properties can be serialized. Not going to include anything on saving the generated JSON String to a file & loading it, that's not within the scope of this project.<br>
@@ -70,11 +70,11 @@ Found in [config_game_item_chest.tres](config_game_item_chest.tres). Using [game
 Now is where we will utilized `extend_other_config`.  `GameItemChest extends GameItem` is why. We want any chest instance to also have its parent properties from `GameItem` to be serialized. So instead of wasting time redefining them, we can drag [config_game_item.tres](config_game_item.tres) to `extend_other_config` and now Improved JSON will also include properties from that config file.
 
 For this class's properties we just want `contents`, added the same way as all of the others.
-
+<br>
 
 ### Registering JSONObjectConfigs
 The most important part is to remember to add these new config files to your JSONObjectConfigRegistry resource's `user_configs` array property, gone over in the [main README](../README.md). If you forget, it will not work. You *can* also do what I did in this example (as I don't have any registry file set for this project) and manually add them each time your game starts up via `JSONSerialization.object_config_registry.add_config(config)`, but that isn't recommended.
-
+<br>
 
 ## Wrapping it all up
 Check out the code & comments in [object_example.gd](object_example.gd) to see how this now ties into saving & loading. A lot easier to see the code in action with explanations than it is to read another wall of text here.
