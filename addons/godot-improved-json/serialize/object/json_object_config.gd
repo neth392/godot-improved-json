@@ -56,6 +56,10 @@ class_name JSONObjectConfig extends Resource
 ## Can be set so that the [member properties] of another config are included
 ## when serializing/deserializing. Useful when creating configs for objects within
 ## the same class hierarchy.
+## [br]NOTE: If any [JSONProperty] in [member properties] contains the same
+## [member JSONProperty.property_name] as any property in the extended config, it will
+## override the one in the extended config. Can be useful to disable properties or
+## handle missing properties differently.
 @export var extend_other_config: JSONObjectConfig:
 	set(value):
 		if extend_other_config != null && extend_other_config.extend_other_config == self:
