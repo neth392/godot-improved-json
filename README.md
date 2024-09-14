@@ -39,7 +39,7 @@ For now, [open up a new issue](https://github.com/neth392/godot-improved-json/is
 
 ## Installation
 I'll be submitting this project to the Godot AssetLib for easier installation, & will update this accordingly once done. For now see the steps to install:
-1) Download the latest release's .zip file(TODO link releases)
+1) [Download the latest release](https://github.com/neth392/godot-improved-json/releases)
 2) With your project open in Godot, go to the "**AssetLib**" tab, press the "**Import...**" button, then navigate to the downloaded zip file and select & open it.
 3) Click "**Install**" in the window that pops up. Click **OK**. 
 4) Go to **Project Settings**, **Plugins**, and then enable `Improved Godot JSON`
