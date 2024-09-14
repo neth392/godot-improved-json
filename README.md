@@ -81,7 +81,6 @@ This method has the same behavior as `parse(string)`, but instead of creating a 
 
 The only real use here is to maintain original values in an Object, Array, or Dictionary, and append the values from the JSON.
 
-
 ### Creating a new instance of JSONSerialization
 For the below two sections, you may want to create a new `JSONSerialization` instance instead of just always using the autoloaded/global one. Usually this isn't needed, but in the case it is you can do so by calling `JSONSerialization.new_impl()`. It will return a new `JSONSerializationImpl` which is the class that contains all of the functionality. It does extend `Node` (to support the autoload) but you should **not** add it to the scene tree. 
 
@@ -91,7 +90,7 @@ This is only useful for [different configurations](#Configuring-JSON.parse-&-JSO
 Godot's own `JSON` has a few optional parameters when calling `JSON.parse()` and `JSON.stringify()`. Those parameters are configurable via a few properties on the `JSONSerialization` instance; `indent`, `sort_keys`, `full_precision`, and `keep_text`. They all default to what they do in native Godot except `sort_keys` which has been set to `false` to preserve `Dictionary` ordering when deserializing.
 
 ### Accessing JSON errors
-The internal `JSON` instance can be accessed via `JSONSerialization.get_json()`. You can read errors from it the
+The internal `JSON` instance can be accessed via `JSONSerialization.get_json()`. You can read errors from it the same way you do via [`get_error_line()`](https://docs.godotengine.org/en/stable/classes/class_json.html#class-json-method-get-error-line) and [`get_error_message()`](https://docs.godotengine.org/en/stable/classes/class_json.html#class-json-method-get-error-message).
 
 ### Important Notes on Dictionaries
 JSON does not allow for keys to be JSON objects or arrays, therefore *every* key in Godot's `Dictionary` type is stored as a String. 
