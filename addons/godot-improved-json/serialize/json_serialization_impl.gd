@@ -47,8 +47,6 @@ var _basis: JSONSerializer
 
 # Internal JSON object & errors
 var _json: JSON = JSON.new()
-var _error_message: String
-
 
 ## Returns the underlying [JSON] instance in use by this instance.
 func get_json() -> JSON:
