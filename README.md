@@ -82,9 +82,11 @@ This method has the same behavior as `parse(string)`, but instead of creating a 
 The only real use here is to maintain original values in an Object, Array, or Dictionary, and append the values from the JSON.
 
 ### Creating a new instance of JSONSerialization
-For the below two sections, you may want to create a new `JSONSerialization` instance instead of just always using the autoloaded/global one. Usually this isn't needed, but in the case it is you can do so by calling `JSONSerialization.new_impl()`. It will return a new `JSONSerializationImpl` which is the class that contains all of the functionality. It does extend `Node` (to support the autoload) but you should **not** add it to the scene tree. 
+For the below two sections, you may want to create a new `JSONSerialization` instance instead of just always using the autoloaded/global one. Usually this isn't needed, but in the case it is you can do so by calling `JSONSerialization.new_impl()`. It will return a new `JSONSerializationImpl` which is the class that contains all of the functionality. It does extend `Node` (to support the autoload) but you should **not** add it to the scene tree. Remember to `queue_free()` it after you're done with it!
 
-This is only useful for different configurations and accessing JSON errors explained below.
+Creating a new instance will essentially "snapshop" the global instance at that current time, so any changes to the global instance will not reflect in the new instance and vice versa.
+
+**REMINDER:** Since `JSONSerializationImpl` extends `Node`, you **must** `queue_free()` it when you are done with it. Otherwise there will be memory leaks.
 
 ### Configuring JSON.parse & JSON.stringify optional parameters
 Godot's own `JSON` has a few optional parameters when calling `JSON.parse()` and `JSON.stringify()`. Those parameters are configurable via a few properties on the `JSONSerialization` instance; `indent`, `sort_keys`, `full_precision`, and `keep_text`. They all default to what they do in native Godot except `sort_keys` which has been set to `false` to preserve `Dictionary` ordering when deserializing.
@@ -103,10 +105,39 @@ In order to preserve dictionary ordering ([it does exist in Godot](https://docs.
 
 ## Object Serialization
 
-TODO
+### `ObjectJSONConfigRegistry`
+In [installation](#Installation) we went over creating this resource file & setting it in project settings. Now to explain the use of it. This resource is where you register your `ObjectJSONConfig` resources so that `JSONSerialization` can properly serialize & deserialize objects of different classes. You add them to the `user_conifgs` export and that's it.
 
+### `JSONObjectConfig`
+Each `JSONObjectConfig` represents a specific class that can be serialized/deserialized. It is the specification or template on how to do such with an object of that class. Ideally these should be saved as their own individual files and then registered to the `ObjectJSONConfigRegistry`. 
 
-For an example, see the [Object Example](examples/object).
+The purpose behind this is to only include properties that need to be serialized, no extra BS. It was designed to support the refactoring of scripts & scenes, and the changing of class names & property names. Each of the exported properties will be explained below.
+
+#### `id`
+The ID is stored in JSON text when an object of this type is serialized. Every `id` must be completely **unique** from every other config's id. **This should be set and not changed**, if it is changed it will break saved data. I usually set this as the `class_name` of the object, and infact if you set one of the below 2 properties first `id` will automatically set to the class name. The only downside is if the class name changes, the ID can't and will still be the old class name.
+
+It *is* safe to change the `id` if you're game is still in development and you aren't worried about breaking saves. But once you publish and users have saved content, **DO. NOT. CHANGE. THIS.** If you do, I send my prayers <3
+
+#### `for_class` & `set_for_class_by_script`
+These two properties are directly linked. They represent the class the config is for.
+
+If it is for a custom class, you can simply drag the `GDScript` from the FileSystem dock to the `set_for_class_by_script` property. You'll notice the `for_class` automatically updates & locks as it is now derived from the script. This is the recommended method for any custom classes.
+
+For native classes, such as Label, Button, etc. you can click the `for_class` value and search for the class and simply click on it.
+
+**NOTE:** If a class name changes & you did NOT set it by the script, you must update it manually. But if you set it by the script, any changes to the class name or script path will automatically update.
+
+#### `instantiator`
+This must be set to one of the `JSONInstantiator` implementations. It allows you specify how to create instances of the object.
+
+##### For PackedScenes
+If your class is part of a `PackedScene`, set it to a `JSONSceneInstantiator`. Set that instantiator's `scene` property by dragging your `tscn` file from the FileSystem dock. Your `PackedScene` must be able to be instantiated via `PackedScene.instantiate()`
+
+##### For Non-Scenes
+For anything such as extends Object, Resource, RefCounted, etc. you can use the `JSONScriptInstantiator`. This time drag your `.gd` script to the `gd_script` property of the instantiator. 
+
+### Example:
+For an example of a few custom objects, see the [Object Example](examples/object).
 <br>  
 
 
