@@ -108,9 +108,20 @@ func _editor_update() -> void:
 ## (if it isn't null).
 func get_properties_extended() -> Array[JSONProperty]:
 	var extended: Array[JSONProperty] = []
-	extended.append_array(properties)
+	var names: Dictionary[String, Variant] = {}
+	
+	# Add these properties
+	for property: JSONProperty in properties:
+		names[property.property_name] = true
+		extended.append(property)
+	
+	# Add extended properties (unless overridden)
 	if extend_other_config != null:
-		extended.append_array(extend_other_config.get_properties_extended())
+		for property: JSONProperty in extend_other_config.get_properties_extended():
+			if names.has(property.property_name): # Skip if it was overridden in this config
+				continue
+			extended.append(property)
+	
 	return extended
 
 
