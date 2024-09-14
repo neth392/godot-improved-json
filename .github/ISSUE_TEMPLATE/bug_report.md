@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report a bug with Godot Improved JSON
-title: "[BUG]"
+title: "[BUG] "
 labels: bug
 assignees: neth392
 

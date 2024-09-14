@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest new features & enhancements
-title: "[FEATURE REQ]"
+title: "[FEATURE REQ] "
 labels: enhancement
 assignees: neth392
 
