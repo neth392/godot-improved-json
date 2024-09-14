@@ -4,3 +4,4 @@
 
 [node name="JSONSerialization" type="Node"]
 script = ExtResource("1_mlbr7")
+sort_keys = true
