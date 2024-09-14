@@ -64,8 +64,6 @@ After installing it there is an additional step if you want `Object` support. In
 ## Basic Usage
 
 TODO
-
-For an example, see the [Basic Example](examples/basic).
 <br>  
 
 ### Important Notes on Dictionaries
