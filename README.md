@@ -39,9 +39,16 @@ For now, [open up a new issue](https://github.com/neth392/godot-improved-json/is
 
 ## Installation
 I'll be submitting this project to the Godot AssetLib for easier installation, & will update this accordingly once done. For now see the steps to install:
-1) Download 
- 2) 
- <br>  
+1) Download the latest release's .zip file(TODO link releases)
+2) With your project open in Godot, go to the "**AssetLib**" tab, press the "**Import...**" button, then navigate to the downloaded zip file and select & open it.
+3) Click "**Install**" in the window that pops up. Click **OK**. 
+4) Go to **Project Settings**, **Plugins**, and then enable `Improved Godot JSON`
+5) Ignore any errors that appear and **reload the project.**
+
+
+After installing it there is an additional step if you want `Object` support. In Project Settings there is a new setting the plugin adds under `improved_json/config/json_object_config_registry`. That setting must point to a resource of the type `JSONObjectConfigRegistry` anywhere within your project's directory (more on this later). So to set that up, right click the desired folder in the FileSystem dock and create a new `JSONObjectConfigRegistry` resource. The name or location don't matter, just make sure the extension is `.tres`. Go back to Project Settings and set the above setting to the file path of your new registry resource file.
+
+<br>  
  
 ## Limitations
 - Serialized objects **must** have an explicit `class_name` defined in their script.
