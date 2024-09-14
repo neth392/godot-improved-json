@@ -84,7 +84,7 @@ The only real use here is to maintain original values in an Object, Array, or Di
 ### Creating a new instance of JSONSerialization
 For the below two sections, you may want to create a new `JSONSerialization` instance instead of just always using the autoloaded/global one. Usually this isn't needed, but in the case it is you can do so by calling `JSONSerialization.new_impl()`. It will return a new `JSONSerializationImpl` which is the class that contains all of the functionality. It does extend `Node` (to support the autoload) but you should **not** add it to the scene tree. 
 
-This is only useful for [different configurations](#Configuring-JSON.parse-&-JSON.stringify-optional-parameters) and [accessing JSON errors](#Accessing-JSON-errors).
+This is only useful for different configurations and accessing JSON errors explained below.
 
 ### Configuring JSON.parse & JSON.stringify optional parameters
 Godot's own `JSON` has a few optional parameters when calling `JSON.parse()` and `JSON.stringify()`. Those parameters are configurable via a few properties on the `JSONSerialization` instance; `indent`, `sort_keys`, `full_precision`, and `keep_text`. They all default to what they do in native Godot except `sort_keys` which has been set to `false` to preserve `Dictionary` ordering when deserializing.
