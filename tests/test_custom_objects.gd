@@ -172,7 +172,7 @@ func _deep_compare(original: Variant, deserialized: Variant) -> String:
 
 
 func _deep_compare_array(original: Array, deserialized: Variant) -> String:
-	if deserialized is not Array:
+	if !(deserialized is Array):
 		return "deserialized not of type Array"
 	if original.size() != deserialized.size():
 		return "array size mismatch: original=%s, deserialized=%s" % [original.size(), deserialized.size()]
@@ -189,7 +189,7 @@ func _deep_compare_array(original: Array, deserialized: Variant) -> String:
 
 
 func _deep_compare_dictionary(original: Dictionary, deserialized: Variant) -> String:
-	if deserialized is not Dictionary:
+	if !(deserialized is Dictionary):
 		return "deserialized not of type Dictionary"
 	if original.size() != deserialized.size():
 		return "dictionary size mismatch: original=%s, deserialized=%s" \
@@ -217,7 +217,7 @@ func _deep_compare_dictionary(original: Dictionary, deserialized: Variant) -> St
 
 # Only supports JSONTestObjectExtended
 func _deep_compare_object(original: Object, deserialized: Variant) -> String:
-	if deserialized is not Object:
+	if !(deserialized is Object):
 		return "deserialized not of type Object"
 	
 	var original_class: String = GodotJSONUtil.get_class_name(original)
