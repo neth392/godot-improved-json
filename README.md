@@ -131,13 +131,13 @@ For native classes, such as Label, Button, etc. you can click the `for_class` va
 #### `instantiator`
 This must be set to one of the `JSONInstantiator` implementations. It allows you specify how to create instances of the object.
 
-##### For PackedScenes
+#### For PackedScenes
 If your class is part of a `PackedScene`, set it to a `JSONSceneInstantiator`. Set that instantiator's `scene` property by dragging your `tscn` file from the FileSystem dock. Your `PackedScene` must be able to be instantiated via `PackedScene.instantiate()` which is what is called internally.
 
-##### For Non-Scene Custom Classes
+#### For Non-Scene Custom Classes
 For anything such as extends Object, Resource, RefCounted, etc. you can use the `JSONScriptInstantiator`. This time drag your `.gd` script to the `gd_script` property of the instantiator. Instances of these objects will be created via `new(...)`. Only the **first constructor** defined will be used. All parameters **must have default values** or an error will be thrown. No constructor is required though.
 
-##### For Native Classes
+#### For Native Classes
 To create instances of native godot classes (nodes, resources, etc) use a `JSONNativeObjectInstantiator`. Simply set the `_class` property by clicking on the value and selecting the class this config is for. Instances are internally created via `ClassDB.instantiate(...)`. 
 
 #### `properties` & `JSONProperty`
@@ -145,28 +145,33 @@ This is below `extend_other_config` in the editor inspector but it is important 
 
 This is an array of `JSONProperty` resources. A `JSONProperty` represents a property in an object that is to be serialized & deserialized. For each property of an object you want to serialize, you need to create a `JSONProperty` to represent it. These resources should usually not be saved to their own files. Just create & store them in the `JSONObjectConfig`.
 
-##### `JSONProperty.json_key`
+#### `JSONProperty.json_key`
 This is just like `id` of `JSONObjectConfig`. It is serialized & stored in JSON to identify the property. I usually set it to the property name, and you'll notice if you set `property_name` it'll automatically populate to that if not set yet.
 
 **NOTE: IT CAN NOT CHANGE** or it will break existing save data. Not going to give another lecture but just remember this. It must be unique from the other keys of all other `JSONProperty`s of this object, doesn't need to be unique across the project. It helps preserve against property name changes as it allows `property_name` (explained below) to change without breaking saved data.
 
-##### `JSONProperty.property_name`
+#### `JSONProperty.property_name`
 This is simply the actual property name within the object. You **do** need to change this is if the property name changes. The editor inspector will display a dropdown of all available properties for your convenience. If it doesn't show up your `for_class` or `set_for_class_by_script` isn't set correctly.
 
-##### JSONProperty Advanced
+#### JSONProperty Advanced
 **`enabled`**
+
 Disable or enable this property.
 
 **`allow_null`**
+
 If false, throws an error (only in debug mode) if the property's value is null at time of serialization.
 
 **`if_missing_in_object_serialize`**
+
 How to handle `property_name` not being present in an object when an attempt is made to serialize it. Usually should be `ERROR_DEBUG` as it represents a bad configuration.
 
 **`if_missing_in_json`**
+
 How to handle `json_key` not being present in JSON that represents this object. Usually should be `IGNORE` as you may add properties which are not in older saves.
 
 **`if_missing_in_object_serialize`**
+
 How to handle `property_name` not being present in an object when an attempt is made to deserialize an instance of it from JSON. Usually should be `ERROR_DEBUG` as it represents a bad configuration.
 
 #### `extend_other_config`
