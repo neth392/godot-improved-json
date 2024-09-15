@@ -1,6 +1,6 @@
 
 # Object Example Walkthrough
-This page will walk you through how the object example works & was made. This isn't a functional game, but should give you an idea how to implement this project in your own game. This example assumes you have already read over the [main docs](../../README.md) and have your project's `ObjectJSONConfigRegistry` configured.
+This page will walk you through how the object example works & was made. This isn't a functional game, but should give you an idea how to implement this project in your own game. This example assumes you have already read over the [main docs](../../README.md) and have your project's `JSONObjectConfigRegistry` configured.
 
 ## Table of Contents
 - [The Data Objects](#The-Data-Objects)
