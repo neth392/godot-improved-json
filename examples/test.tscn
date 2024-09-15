@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmrng77hvgpj7"]
+
+[ext_resource type="Script" path="res://examples/test.gd" id="1_5p00p"]
+
+[node name="Test" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_5p00p")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Linda is a Gortanamo!"

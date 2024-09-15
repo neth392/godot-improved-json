@@ -112,7 +112,7 @@ func _editor_update() -> void:
 ## (if it isn't null).
 func get_properties_extended() -> Array[JSONProperty]:
 	var extended: Array[JSONProperty] = []
-	var names: Dictionary[String, Variant] = {}
+	var names: Dictionary = {}
 	
 	# Add these properties
 	for property: JSONProperty in properties:

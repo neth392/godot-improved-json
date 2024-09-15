@@ -1,6 +1,6 @@
 class_name JSONTestUtil extends Object
 
-static var type_names: Dictionary[Variant.Type, String] = {
+static var type_names: Dictionary = {
 	TYPE_NIL: "TYPE_NIL",
 	TYPE_BOOL: "TYPE_BOOL",
 	TYPE_INT: "TYPE_INT",
