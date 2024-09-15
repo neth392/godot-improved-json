@@ -18,7 +18,6 @@ allow_null = true
 if_missing_in_object_serialize = 2
 if_missing_in_json = 2
 if_missing_in_object_deserialize = 2
-deserialize_into = false
 
 [sub_resource type="Resource" id="Resource_a4kts"]
 script = ExtResource("1_addpr")
@@ -29,7 +28,6 @@ allow_null = true
 if_missing_in_object_serialize = 2
 if_missing_in_json = 2
 if_missing_in_object_deserialize = 2
-deserialize_into = false
 
 [sub_resource type="Resource" id="Resource_8rpby"]
 script = ExtResource("1_addpr")
@@ -40,7 +38,6 @@ allow_null = true
 if_missing_in_object_serialize = 2
 if_missing_in_json = 2
 if_missing_in_object_deserialize = 2
-deserialize_into = false
 
 [resource]
 script = ExtResource("2_4h780")
