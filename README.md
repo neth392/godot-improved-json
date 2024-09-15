@@ -18,7 +18,7 @@ Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless metho
 <br>  
 
 ## FAQ
-- **Will versions earlier than Godot 4.4 be supported?** No, I wanted to be sure typed Dictionaries were included without the hassle of detecting current version.
+- **Will versions earlier than Godot 4.4 be supported?** No plans currently, I wanted to be sure typed Dictionaries were included without the hassle of detecting current version. I could make the change if enough people request it, just submit an issue
 <br>  
 
 ## Why?
