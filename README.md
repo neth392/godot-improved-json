@@ -114,12 +114,12 @@ Each `JSONObjectConfig` represents a specific class that can be serialized/deser
 
 The purpose behind this is to only include properties that need to be serialized, no extra BS. It was designed to support the refactoring of scripts & scenes, and the changing of class names & property names. Each of the exported properties will be explained below.
 
-#### `id`
+### `id`
 The ID is stored in JSON text when an object of this type is serialized. Every `id` must be completely **unique** from every other config's id. **This should be set and not changed**, if it is changed it will break saved data. I usually set this as the `class_name` of the object, and infact if you set one of the below 2 properties first `id` will automatically set to the class name. The only downside is if the class name changes, the ID can't and will still be the old class name.
 
 It *is* safe to change the `id` if you're game is still in development and you aren't worried about breaking saves. But once you publish and users have saved content, **DO. NOT. CHANGE. THIS.** If you do, I send my prayers <3
 
-#### `for_class` & `set_for_class_by_script`
+### `for_class` & `set_for_class_by_script`
 These two properties are directly linked. They represent the class the config is for.
 
 If it is for a custom class, you can simply drag the `GDScript` from the FileSystem dock to the `set_for_class_by_script` property. You'll notice the `for_class` automatically updates & locks as it is now derived from the script. This is the recommended method for any custom classes.
@@ -128,32 +128,32 @@ For native classes, such as Label, Button, etc. you can click the `for_class` va
 
 **NOTE:** If a class name changes & you did NOT set it by the script, you must update it manually. But if you set it by the script, any changes to the class name or script path will automatically update.
 
-#### `instantiator`
+### `instantiator`
 This must be set to one of the `JSONInstantiator` implementations. It allows you specify how to create instances of the object.
 
-#### For PackedScenes
+### For PackedScenes
 If your class is part of a `PackedScene`, set it to a `JSONSceneInstantiator`. Set that instantiator's `scene` property by dragging your `tscn` file from the FileSystem dock. Your `PackedScene` must be able to be instantiated via `PackedScene.instantiate()` which is what is called internally.
 
-#### For Non-Scene Custom Classes
+### For Non-Scene Custom Classes
 For anything such as extends Object, Resource, RefCounted, etc. you can use the `JSONScriptInstantiator`. This time drag your `.gd` script to the `gd_script` property of the instantiator. Instances of these objects will be created via `new(...)`. Only the **first constructor** defined will be used. All parameters **must have default values** or an error will be thrown. No constructor is required though.
 
-#### For Native Classes
+### For Native Classes
 To create instances of native godot classes (nodes, resources, etc) use a `JSONNativeObjectInstantiator`. Simply set the `_class` property by clicking on the value and selecting the class this config is for. Instances are internally created via `ClassDB.instantiate(...)`. 
 
-#### `properties` & `JSONProperty`
+### `properties` & `JSONProperty`
 This is below `extend_other_config` in the editor inspector but it is important to understand properties first.
 
 This is an array of `JSONProperty` resources. A `JSONProperty` represents a property in an object that is to be serialized & deserialized. For each property of an object you want to serialize, you need to create a `JSONProperty` to represent it. These resources should usually not be saved to their own files. Just create & store them in the `JSONObjectConfig`.
 
-#### `JSONProperty.json_key`
+### `JSONProperty.json_key`
 This is just like `id` of `JSONObjectConfig`. It is serialized & stored in JSON to identify the property. I usually set it to the property name, and you'll notice if you set `property_name` it'll automatically populate to that if not set yet.
 
 **NOTE: IT CAN NOT CHANGE** or it will break existing save data. Not going to give another lecture but just remember this. It must be unique from the other keys of all other `JSONProperty`s of this object, doesn't need to be unique across the project. It helps preserve against property name changes as it allows `property_name` (explained below) to change without breaking saved data.
 
-#### `JSONProperty.property_name`
+### `JSONProperty.property_name`
 This is simply the actual property name within the object. You **do** need to change this is if the property name changes. The editor inspector will display a dropdown of all available properties for your convenience. If it doesn't show up your `for_class` or `set_for_class_by_script` isn't set correctly.
 
-#### JSONProperty Advanced
+### JSONProperty Advanced
 **`enabled`**
 
 Disable or enable this property.
@@ -174,7 +174,7 @@ How to handle `json_key` not being present in JSON that represents this object. 
 
 How to handle `property_name` not being present in an object when an attempt is made to deserialize an instance of it from JSON. Usually should be `ERROR_DEBUG` as it represents a bad configuration.
 
-#### `extend_other_config`
+### `JSONObjectConfig.extend_other_config`
 This property allows you to drag over another `JSONObjectConfig` resource from the FileSystem dock as the value. Say you have `ParentClass` and then `ChildClass extends ParentClass`. You have a `JSONObjectConfig` for each of them. Both classes have some of their own properties but you don't want to waste time creating a `JSONProperty` for each of `ParentClass`'s properties *again* on `ChildClass`'s config. You can then set the child config's `extend_other_config` to the config of the parent by dragging the parent config to it from the FileSystem dock. The child's config will now inherit all `JSONProperty`s defined in the parent config.
 
 You can still override those parent properties within the child config by just creating new `JSONProperty`s in the child config and setting the `property_name` to the same value. `json_key` does not have to be the same. You can also disable specific parent properties by doing that and setting `enabled` to false.
