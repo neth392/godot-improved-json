@@ -18,4 +18,4 @@ icon.png.import export-ignore
 LICENSE export-ignore
 project.godot export-ignore
 README.md export-ignore
-create-release.sh export-ignore
+create_release.sh export-ignore
