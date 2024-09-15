@@ -2,7 +2,7 @@
 
 ![Godot-JSON Icon](icon.png)
 
-Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless methods of serializing & deserializing any variant, including Objects and their properties.
+Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods of serializing & deserializing any variant, including Objects and their properties.
 <br>  
 
 ## Table of Contents
@@ -18,7 +18,7 @@ Godot Improved JSON is a Godot 4.4 (or later) addon that provides seamless metho
 <br>  
 
 ## FAQ
-- **Will versions earlier than Godot 4.4 be supported?** Yes, I am working on 4.3 support right now.
+- **Does it work with versions earlier than 4.3?**  Probably, but I haven't tested it on earlier versions.
 <br>  
 
 ## Why?
