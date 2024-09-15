@@ -1,9 +1,7 @@
 ## Object used in Gut tests.
 ## Most properties here should account for testing of every possible type, except objects.
 ## For objects, see [JSONTestObjectExtended]
-class_name JSONTestObject extends RefCounted
-
-const PROPERTY_PREFIX: String = "type_"
+class_name JSONTestObject_4_3 extends RefCounted
 
 var type_bool: bool = true
 var type_int: int = 42
@@ -44,12 +42,6 @@ var type_int_array_of_ints: Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 var type_array_of_random_arrays: Array[Array] = [[1, 2, 3, 4, 5, 6], ["hi!", "hello!", "test"], 
 [2.0, 1, Vector2(1.0, 2.0)], ["string", 1.0, 2, true, NodePath("/root/Node/AnotherNode")]]
 var type_untyped_dictionary: Dictionary = {"yo": Vector3(1.0,2.0,3.0), 2: -4.0, Color.RED: false}
-var type_typed_dictionary: Dictionary[String, float] = {"1": 1, "2": 2.0, "3": 3.1}
-var type_key_typed_dictionary: Dictionary[int, Variant] = {1: true, 2: "false", 3: 20, 4: Color.MAGENTA}
-var type_value_typed_dictionary: Dictionary[Variant, float] = {false: 1, 5.0: 2.0, "true": 3.0, Vector4(1.0,2.0,3,4): 4.0}
 var type_empty_untyped_array: Array = []
 var type_empty_typed_array: Array[Node] = []
 var empty_untyped_dictionary: Dictionary = {}
-var empty_typed_dictionary: Dictionary[String, Node] = {}
-var empty_key_typed_dictionary: Dictionary[Node, Variant] = {}
-var empty_value_typed_dictionary: Dictionary[Variant, Node] = {}

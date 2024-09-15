@@ -17,6 +17,9 @@ var _registry_path: String:
 var _registry_path_cache: String
 var _ignore_setting_change: bool = false
 
+## If the Godot version is 4.4 or later.
+var _is_4_4_or_later: bool = false
+
 ## Constructs a new [JSONSerializationImpl] instance with support for reading errors.
 ## The returned node should NOT be added to the tree.
 func new_impl() -> JSONSerializationImpl:
@@ -36,6 +39,9 @@ func new_impl() -> JSONSerializationImpl:
 	return instance
 
 func _ready() -> void:
+	var version: Dictionary = Engine.get_version_info()
+	_is_4_4_or_later = version.major >= 4 && version.minor >= 4
+	
 	# Add types confirmed to be working with PrimitiveJSONSerializer
 	# see default/primitive_json_serializer_tests.gd for code used to test this
 	# Some were omitted as they made no sense; such as Basis which worked but
@@ -58,7 +64,15 @@ func _ready() -> void:
 	add_serializer(preload("./native/array_json_serializer.gd").new())
 	
 	# TYPE_DICTIONARY
-	add_serializer(preload("./native/dictionary_json_serializer.gd").new())
+	if _is_4_4_or_later:
+		# Conditionally load to prevent errors in the editor
+		var gd_script: GDScript = GDScript.new()
+		var path: String = get_script().resource_path.get_base_dir() + "/native/4_4_dictionary_json_serializer.txt"
+		gd_script.source_code = FileAccess.get_file_as_string(path)
+		gd_script.reload(false)
+		add_serializer(gd_script.new())
+	else:
+		add_serializer(preload("./native/4_3_dictionary_json_serializer.gd").new())
 	
 	# TYPE_OBJECT
 	add_serializer(preload("./object/object_json_serializer.gd").new())

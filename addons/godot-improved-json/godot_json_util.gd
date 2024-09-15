@@ -3,12 +3,6 @@
 class_name GodotJSONUtil extends Object
 
 
-
-static func is_4_4_or_later() -> bool:
-	
-	return false
-
-
 ## Returns the number of times the method with the name [param method_name]
 ## appears in the [param script]'s [method Script.get_script_method_list]. Useful
 ## for determining if a method is inherited or not.

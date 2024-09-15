@@ -46,7 +46,7 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 	if dict.has("t"): # Non-object typed array
 		array = Array([], int(dict.t), "", null)
 	elif dict.has("c"): # Built-in/native object typed array
-		array = Array([], TYPE_OBJECT, dict.c, null)
+		array = Array([], TYPE_OBJECT, StringName(dict.c), null)
 	elif dict.has("i"): # Custom object typed array
 		var config_id: StringName = StringName(dict.i)
 		var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(config_id)

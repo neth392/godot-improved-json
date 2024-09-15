@@ -1,3 +1,4 @@
+## Dictionary serializer for Godot 4.4 or later (typed dictionary support)
 extends JSONSerializer
 
 const INDEX_PREFIX: String = ":"
@@ -17,17 +18,15 @@ func _get_id() -> Variant:
 func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	assert(instance is Dictionary, "instance not of type Dictionary")
 	
-	var dict_instance: Dictionary = instance as Dictionary
-	
 	var serialized: Dictionary = {}
 	
 	var index: int = 0
-	for key: Variant in dict_instance:
+	for key: Variant in instance:
 		# NOTE: JSON keys need to be strings, so we use stringify here instead
 		var serialized_key: String = impl.stringify(key)
 		assert(!serialized_key.is_empty(), "serialized key (%s) empty for key (%s) of dictionary (%s)" \
-		% [serialized_key, key, dict_instance])
-		var serialized_value: Variant = impl.serialize(dict_instance[key])
+		% [serialized_key, key, instance])
+		var serialized_value: Variant = impl.serialize(instance[key])
 		
 		var indexed_key: String = _index_key(index, serialized_key)
 		serialized[indexed_key] = serialized_value
@@ -40,14 +39,14 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	}
 	
 	# Set key type
-	if dict_instance.is_typed_key():
-		result.k = GodotJSONUtil.create_type_dict(impl, dict_instance.get_typed_key_builtin(), 
-		dict_instance.get_typed_key_class_name(), dict_instance.get_typed_key_script())
+	if instance.is_typed_key():
+		result.k = GodotJSONUtil.create_type_dict(impl, instance.get_typed_key_builtin(), 
+		instance.get_typed_key_class_name(), instance.get_typed_key_script())
 	
 	# Set value type
-	if dict_instance.is_typed_value():
-		result.v = GodotJSONUtil.create_type_dict(impl, dict_instance.get_typed_value_builtin(), 
-		dict_instance.get_typed_value_class_name(), dict_instance.get_typed_value_script())
+	if instance.is_typed_value():
+		result.v = GodotJSONUtil.create_type_dict(impl, instance.get_typed_value_builtin(), 
+		instance.get_typed_value_class_name(), instance.get_typed_value_script())
 	
 	return result
 

@@ -1,5 +1,7 @@
 class_name JSONTestUtil extends Object
 
+const PROPERTY_PREFIX: String = "type_"
+
 static var type_names: Dictionary = {
 	TYPE_NIL: "TYPE_NIL",
 	TYPE_BOOL: "TYPE_BOOL",
@@ -44,3 +46,17 @@ static var type_names: Dictionary = {
 
 static func get_type_of(variant: Variant) -> String:
 	return type_names[typeof(variant)]
+
+
+static func load_test_object_script() -> GDScript:
+	if JSONSerialization._is_4_4_or_later:
+		return load("res://tests/util/json_test_object_4_4.gd")
+	else:
+		return load("res://tests/util/json_test_object_4_3.gd")
+
+
+static func load_test_object_extended_script() -> GDScript:
+	if JSONSerialization._is_4_4_or_later:
+		return load("res://tests/util/json_test_object_extended_4_4.gd")
+	else:
+		return load("res://tests/util/json_test_object_extended_4_3.gd")
