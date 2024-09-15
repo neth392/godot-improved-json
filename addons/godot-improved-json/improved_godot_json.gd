@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
 
-var icon: Texture2D = preload("res://icon.svg")
+var icon: Texture2D = preload("res://icon.png")
 
 func _get_plugin_name() -> String:
 	return "Improved Godot JSON"
