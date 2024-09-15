@@ -3,6 +3,6 @@
 
 
 # Only include the addons folder when downloading from the Asset Library.
-/**         export-ignore
+/** export-ignore
 /addons/gut export-ignore
-/addons/**  !export-ignore
+/addons/godot-improved-json !export-ignore
