@@ -17,6 +17,20 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 	- [Custom Objects](examples/object)
 <br>  
 
+## Features
+- Provides a `JSONSerialization` autoloaded/globally accessible class with several functions for converting any type to/from JSON.
+- All `Variant.Type`s are supported. 
+	- No longer will your `StringName` be deserialized as a `String`, or your `int` as a `float`. Types are deserialized as the *exact* type they were when serialized.
+- Custom & Native object support (including resources, nodes, anything that extends `Object`).
+	- Configurations for each class define what is to be serialized, only including the properties that you define thus compacting your JSON files making for smaller files, quicker load & save times.
+	- Assign an `id` to each class's config, and a `json_key` to each property. This allows you to change class names, script paths, & property names without having to modify the old JSON. Simply update your the JSON config for the class that changed.
+	- Automatically instantiate a `PackedScene` from JSON for `Node` derived classes; keep your default values default!
+- Editor tools for quickly creating JSON object configurations
+	- Simply dragging & dropping a script or PackedScene will auto populate most of the fields needed to create a JSON object configuration.
+	- When selecting properties to be serialized, the addon automatically detects what properties your class has and suggests them via a drop down so you don't have to worry about typos.
+
+<br>  
+
 ## FAQ
 - **Does it work with versions earlier than 4.3?**  Probably, but I haven't tested it on earlier versions.
 <br>  
