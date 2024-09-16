@@ -6,6 +6,7 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 <br>  
 
 ## Table of Contents
+- [Features](#Features)
 - [FAQ](#FAQ)
 - [Why?](#Why)
 - [Support Links](#Support-Links)
