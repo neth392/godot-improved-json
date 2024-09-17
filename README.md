@@ -33,7 +33,7 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 <br>  
 
 ## FAQ
-- **Does it work with versions earlier than 4.3?**  Probably, but I haven't tested it on earlier versions.
+- **Does it work with versions earlier than 4.3?**  No, it relies on `Script.get_global_name()` which is a feature only added in 4.3.
 <br>  
 
 ## Why?
