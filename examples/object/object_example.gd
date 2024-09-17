@@ -13,7 +13,7 @@ func _ready() -> void:
 	# but this isn't a game so we don't have data :(
 	
 	# Creating the player
-	var my_player: GamePlayer = GamePlayer.new()
+	var my_player: GamePlayer = preload("./game_player.tscn").instantiate()
 	my_player.player_name = "neth"
 	my_player.player_color = Color.LIME
 	my_player.position = Vector2(100.0, 200.0)
