@@ -77,6 +77,21 @@ class_name JSONObjectConfig extends Resource
 		_editor_update()
 		notify_property_list_changed()
 
+@export_group("Resource Support", "json_res_")
+
+## If true, [member Resource.resource_path] is directly serialized in JSON which
+## will result in errors if that path is moved & an attempt is made to load the JSON with
+## the old path.
+## [br]If false, [member json_res_instances] is used (see those docs for more info).
+## [br][code]false[/code] by default to prevent breakages by changing resource paths.
+@export var json_res_use_resource_path: bool = false
+
+## Array of [JSONResourceFileInstance]s that must contain every [Resource] file instance
+## that can be used in place of constructing a new resource.
+##[br]WARNING: Changes made to this array at runtime will not be reflected as
+## it is converted into an internal [Dictionary] at startup for efficiency.
+@export var json_res_file_instances: Array[JSONResourceFileInstance]
+
 ## A visual property to show you if this config is properly registered in the 
 ## [JSONObjectConfigRegistry] or not.
 var registered: bool:
@@ -88,6 +103,10 @@ var registered: bool:
 ## Internal flag to prevent [member id] from changing at runtime.
 var _id_initialized: bool = false
 
+## Internal dictionary set at runtime, format:
+## [member JSONResourceFileInstance.id]:[JSONResourceFileInstance]
+var _file_instances_by_path: Dictionary
+var _file_instances_by_path_set: bool = false
 
 func _validate_property(property: Dictionary) -> void:
 	# Make registered readonly
@@ -140,6 +159,33 @@ func get_class_script() -> Script:
 	if script_path.is_empty():
 		return null
 	return load(script_path) as Script
+
+
+## Returns true if this [JSONObjectConfig] is for a resource.
+func is_resource() -> bool:
+	if set_for_class_by_script != null:
+		return set_for_class_by_script.get_instance_base_type() == &"Resource"
+	if !for_class.is_empty():
+		return ClassDB.is_parent_class(StringName(for_class), &"Resource")
+	return false
+
+
+## Returns the internal [Dictionary] of [member JSSONResourceFileInstance.id]:[JSONResourceFileInstance].
+## If that dictionary has not yet been populated from [member json_res_file_instances],
+## that is done so first and then it is returned.
+func get_resource_file_instances_by_path() -> Dictionary:
+	assert(!Engine.is_editor_hint(), "method not supported in the Editor")
+	if !_file_instances_by_path_set:
+		for instance: JSONResourceFileInstance in json_res_file_instances:
+			if instance == null:
+				push_warning("JSONObjectConfig(%s) has a null value in json_res_file_instances" \
+				 % id)
+				continue
+			assert(!_file_instances_by_path.has(instance.id), "duplicate " + \
+			"JSONResourceFileInstance.ids (%s) found in json_res_file_instances" % instance.id)
+			_file_instances_by_path[instance.id] == instance
+		_file_instances_by_path_set = true
+	return _file_instances_by_path
 
 
 func _to_string() -> String:

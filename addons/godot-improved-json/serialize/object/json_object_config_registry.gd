@@ -7,8 +7,7 @@ class_name JSONObjectConfigRegistry extends Resource
 
 ## Default configs built into Godot-JSON. Nothing here yet but added the framework
 ## in case I decide to expand upon this more.
-static var _default_configs: Array[JSONObjectConfig] = [
-]
+static var _default_configs: Array[JSONObjectConfig]
 
 ## User (your) configurations to be registered to the global [JSONSerializationImpl]. 
 ## ALL configs need to be registered in order to deserialize objects. It is important
@@ -22,13 +21,13 @@ static var _default_configs: Array[JSONObjectConfig] = [
 			_populate_dictionaries(_user_configs, "_user_configs")
 			_configs.append_array(_user_configs)
 
-var _configs: Array[JSONObjectConfig] = []
+var _configs: Array[JSONObjectConfig]
 
 ## [member JSONObjectConfig.id]:[JSONObjectConfig]
-var _configs_by_id: Dictionary = {}
+var _configs_by_id: Dictionary
 
 ## [member JSONObjectConfig.for_class]:[JSONObjectConfig]
-var _configs_by_class: Dictionary = {}
+var _configs_by_class: Dictionary
 
 func _init() -> void:
 	if !Engine.is_editor_hint():
