@@ -14,6 +14,7 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 - [Limitations and Important Notes](#Limitations-and-Important-Notes)
 - [Basic Usage](#Basic-Usage)
 - [Object Serialization](#Object-Serialization)
+- [Resource File Instances](#Resource-File-Instances)
 - [Examples](./examples/)
 	- [Custom Objects](examples/object)
 <br>  
@@ -29,6 +30,7 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 - Editor tools for quickly creating JSON object configurations
 	- Simply dragging & dropping a script or PackedScene will auto populate most of the fields needed to create a JSON object configuration.
 	- When selecting properties to be serialized, the addon automatically detects what properties your class has and suggests them via a drop down so you don't have to worry about typos.
+- Ability to store "references" to `*.tres` Resource files within JSON, and upon deserialization load the object from the actual resource file. (see [Resource File Instances](#Resource-File-Instances) for a better explanation)
 
 <br>  
 
@@ -202,12 +204,31 @@ How to handle `property_name` not being present in an object when an attempt is 
 This property allows you to drag over another `JSONObjectConfig` resource from the FileSystem dock as the value. Say you have `ParentClass` and then `ChildClass extends ParentClass`. You have a `JSONObjectConfig` for each of them. Both classes have some of their own properties but you don't want to waste time creating a `JSONProperty` for each of `ParentClass`'s properties *again* on `ChildClass`'s config. You can then set the child config's `extend_other_config` to the config of the parent by dragging the parent config to it from the FileSystem dock. The child's config will now inherit all `JSONProperty`s defined in the parent config.
 
 You can still override those parent properties within the child config by just creating new `JSONProperty`s in the child config and setting the `property_name` to the same value. `json_key` does not have to be the same. You can also disable specific parent properties by doing that and setting `enabled` to false.
+<br>  
+
+### Example:
+For an example of a few custom objects & a breakdown on how I set them up, see the [Object Example](examples/object).
+<br>  
 
 ### All Done!
 You're now able to serialize & deserialize your own custom objects. Just remember to register them to the `JSONObjectConfigRegistry` resource defined in your project.
 
-### Example:
-For an example of a few custom objects & a breakdown on how I set them up, see the [Object Example](examples/object).
+<br>  
+
+## Resource File Instances
+In some situations you may find yourself with an instance of a resource that was loaded from a file. There is a configurable system in place within `JSONObjectConfig` which instead of creating a new instance from JSON, will instead load the instance from a `.tres` file (using `CACHE_MODE_REUSE`). This can be useful as these instances will be the exact same and `==` each other, even if they appear multiple times in JSON.
+
+For these properties to appear in the editor inspector while modifying a `JSONObjectConfig`, the `for_class` or `set_for_class_by_script` must have `Resource` as an ancestor.
+
+**NOTE:** This feature will not be used if `deserialize_into` is set to true for any `JSONProperty` of a class that this is configured for. Nor will it work if `JSONSerialization.parse_into` is used. It will only work when dealing with constructing new resource instances from JSON.
+
+### `maintain_resource_instances`
+This property enables or disables the "resource file instance" system. When enabled the below properties will appear in the editor.
+
+### `use_resource_path`
+If enabled this will store the `Resource.resource_path` in the JSON so that when it is deserialized, the instance is loaded from this path. It isn't recommended as resource paths change, and that will break the JSON. 
+
+### REST OF THIS SECTION IS A TODO (ASAP)
 <br>  
 
 
