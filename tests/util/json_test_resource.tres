@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="JSONTestResource" load_steps=3 format=3 uid="uid://d0efdowjmymf5"]
+
+[ext_resource type="Script" path="res://tests/util/json_test_resource.gd" id="1_tsxrv"]
+
+[sub_resource type="Resource" id="Resource_a7jq4"]
+script = ExtResource("1_tsxrv")
+type_string = "Sub Resource String"
+type_float = 5.55
+type_int = 777
+
+[resource]
+script = ExtResource("1_tsxrv")
+type_string = "My String"
+type_float = 3.92
+type_int = 392
+type_sub_resource = SubResource("Resource_a7jq4")

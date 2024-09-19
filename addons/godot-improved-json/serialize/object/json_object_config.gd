@@ -269,7 +269,7 @@ func _populate_resource_dictionaries(array: Array[JSONResourceFileInstance]) -> 
 		"(%s) found in json_res_file_instances of JSONObjectConfig(%s)") % [instance.id, id])
 		
 		_file_instance_by_id[instance.id] = instance
-		_file_instances_by_path[instance.path_to_resource] == instance
+		_file_instances_by_path[instance.path_to_resource] = instance
 
 
 func _editor_update() -> void:
