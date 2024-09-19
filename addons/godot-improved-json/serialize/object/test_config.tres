@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=4 format=3 uid="uid://gdrjhac625oa"]
+
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_resource_file_instance.gd" id="1_y5wbk"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_property.gd" id="2_av76u"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="3_qxkfp"]
+
+[resource]
+script = ExtResource("3_qxkfp")
+id = &"JSONObjectConfig"
+for_class = ""
+properties = Array[ExtResource("2_av76u")]([])
+_json_res_use_resource_path = false
+_json_res_resource_file_instances = Array[ExtResource("1_y5wbk")]([])

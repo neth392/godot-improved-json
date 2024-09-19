@@ -19,12 +19,28 @@ class_name JSONObjectConfig extends Resource
 ## this property becomes read only & is derived from that script.
 @export_custom(PROPERTY_HINT_TYPE_STRING, &"Object") var for_class: String:
 	set(value):
+		# Set script if it exists & isn't already set (for_class was manually set)
+		# Then return from this setter as set_for_class_by_script will call it again
+		if Engine.is_editor_hint() && !value.is_empty():
+			var script_path: String = GodotJSONUtil.get_script_path_from_class_name(value)
+			if !script_path.is_empty():
+				var script: Script = load(script_path) as Script
+				if script != null && script != set_for_class_by_script:
+					set_for_class_by_script = script
+					return
+			
 		if set_for_class_by_script != null && !set_for_class_by_script.get_global_name().is_empty():
+			# Derive class from script
 			for_class = set_for_class_by_script.get_global_name()
 		else:
+			# Set class by input
 			for_class = value
+		
+		# Autopopulate ID if empty
 		if Engine.is_editor_hint() && id.is_empty() && !for_class.is_empty():
 			id = for_class
+		
+		
 		_editor_update()
 	get():
 		if set_for_class_by_script != null && !set_for_class_by_script.get_global_name().is_empty():
@@ -46,7 +62,6 @@ class_name JSONObjectConfig extends Resource
 		else: # Not null, script w/ name
 			set_for_class_by_script = value
 			for_class = set_for_class_by_script.get_global_name()
-		notify_property_list_changed()
 
 ## The [JSONInstantiator] used anytime an object of this type is being deserialized
 ## but the property's assigned value is null and thus an instance needs to be created.
@@ -77,20 +92,26 @@ class_name JSONObjectConfig extends Resource
 		_editor_update()
 		notify_property_list_changed()
 
-@export_group("Resource Support", "json_res_")
+@export_group("Resource Support", "_json_res_")
 
 ## If true, [member Resource.resource_path] is directly serialized in JSON which
 ## will result in errors if that path is moved & an attempt is made to load the JSON with
 ## the old path.
 ## [br]If false, [member json_res_instances] is used (see those docs for more info).
 ## [br][code]false[/code] by default to prevent breakages by changing resource paths.
-@export var json_res_use_resource_path: bool = false
+@export var _json_res_use_resource_path: bool = false
 
 ## Array of [JSONResourceFileInstance]s that must contain every [Resource] file instance
 ## that can be used in place of constructing a new resource.
 ##[br]WARNING: Changes made to this array at runtime will not be reflected as
 ## it is converted into an internal [Dictionary] at startup for efficiency.
-@export var json_res_file_instances: Array[JSONResourceFileInstance]
+@export var _json_res_resource_file_instances: Array[JSONResourceFileInstance]:
+	set(value):
+		_json_res_resource_file_instances = value
+		if !Engine.is_editor_hint():
+			_populate_resource_dictionary(_json_res_resource_file_instances)
+		else:
+			_editor_update()
 
 ## A visual property to show you if this config is properly registered in the 
 ## [JSONObjectConfigRegistry] or not.
@@ -106,7 +127,6 @@ var _id_initialized: bool = false
 ## Internal dictionary set at runtime, format:
 ## [member JSONResourceFileInstance.id]:[JSONResourceFileInstance]
 var _file_instances_by_path: Dictionary
-var _file_instances_by_path_set: bool = false
 
 func _validate_property(property: Dictionary) -> void:
 	# Make registered readonly
@@ -116,15 +136,10 @@ func _validate_property(property: Dictionary) -> void:
 	# Make for_class read only if set by script
 	if property.name == "for_class" && set_for_class_by_script != null:
 		property.usage = property.usage | PROPERTY_USAGE_READ_ONLY
-
-
-func _editor_update() -> void:
-	if !Engine.is_editor_hint():
-		return
-	for property: JSONProperty in properties:
-		if property != null:
-			property._editor_class_name = for_class
-			property._editor_script = set_for_class_by_script
+	
+	# Hide resource properties if type is not of resource
+	if property.name.begins_with("_json_res_") && !is_resource():
+		property.usage = PROPERTY_USAGE_STORAGE
 
 
 ## Returns a new [Array] of all [JSONProperty]s of this instance and [member extend_other_config]
@@ -174,18 +189,60 @@ func is_resource() -> bool:
 ## If that dictionary has not yet been populated from [member json_res_file_instances],
 ## that is done so first and then it is returned.
 func get_resource_file_instances_by_path() -> Dictionary:
-	assert(!Engine.is_editor_hint(), "method not supported in the Editor")
-	if !_file_instances_by_path_set:
-		for instance: JSONResourceFileInstance in json_res_file_instances:
-			if instance == null:
-				push_warning("JSONObjectConfig(%s) has a null value in json_res_file_instances" \
-				 % id)
-				continue
-			assert(!_file_instances_by_path.has(instance.id), "duplicate " + \
-			"JSONResourceFileInstance.ids (%s) found in json_res_file_instances" % instance.id)
-			_file_instances_by_path[instance.id] == instance
-		_file_instances_by_path_set = true
 	return _file_instances_by_path
+	assert(!Engine.is_editor_hint(), "method not supported in the Editor")
+	return _file_instances_by_path
+
+
+## Populates the internal [member _file_instances_by_path] from the [param array].
+## Only available at runtime, not in the editor.
+func _populate_resource_dictionary(array: Array[JSONResourceFileInstance]) -> void:
+	assert(!Engine.is_editor_hint(), "method not supported in the Editor")
+	_file_instances_by_path.clear()
+	
+	# Keep track of ids to ensure no duplicates
+	var ids: PackedStringArray = PackedStringArray()
+	for instance: JSONResourceFileInstance in array:
+		if instance == null:
+			push_warning("JSONObjectConfig(%s) has a null value in json_res_file_instances" \
+			 % id)
+			continue
+		
+		assert(!instance.id.is_empty(), ("json_res_file_instances contains a JSONResourceFileInstance " + \
+		"with an empty ID for JSONObjectConfig(%s)") % id)
+		
+		assert(instance.resource != null, ("JSONResourceFileInstance(%s) does not have a resource " + \
+		"set, found in JSONObjectConfig(%s)") % [instance.id, id])
+		
+		assert(!instance.path_to_resource.is_empty(), ("JSONResourceFileInstance(%s) has an " + \
+		"empty path, found in JSONObjectConfig(%s)") % [instance.id, id])
+		
+		assert(!_file_instances_by_path.has(instance.path_to_resource), ("duplicate " + \
+		"resource paths (%s) found in json_res_file_instances of JSONObjectConfig(%s)") \
+		% [instance.path_to_resource, id])
+		
+		assert(!ids.has(instance.id), ("duplicate JSONResourceFileInstance.ids (%s)" + \
+		"found in json_res_file_instances of JSONObjectConfig(%s)") % [instance.id, id])
+		
+		ids.append(instance.id)
+		_file_instances_by_path[instance.path_to_resource] == instance
+
+
+
+func _editor_update() -> void:
+	if !Engine.is_editor_hint():
+		return
+	
+	for property: JSONProperty in properties:
+		if property != null:
+			property._editor_class_name = for_class
+			property._editor_script = set_for_class_by_script
+	
+	for instance: JSONResourceFileInstance in _json_res_resource_file_instances:
+		if instance != null:
+			instance._editor_type_hint = for_class
+	
+	notify_property_list_changed()
 
 
 func _to_string() -> String:

@@ -20,21 +20,63 @@ class_name JSONResourceFileInstance extends Resource
 ## drag one from your file system. Must be of the same class as defined in the [JSONObjectConfig].
 @export var resource: Resource:
 	set(value):
+		# Behavior in game
+		if !Engine.is_editor_hint():
+			assert(value != null, "resource is null for JSONResourceFileInstance(%s)" % id)
+			resource = value
+			return
+		
+		# Behavior when set from path_to_resource in editor
+		if !_set_other_property:
+			resource = value
+			_set_other_property = true
+			return
+		
+		# Default behavior in editor
 		if value != null:
 			assert(!value.resource_path.is_empty(), ("resource (%s)'s path is empty, this feature" + \
-			"is only designed for resources saved to a file") % value)
-			
-			assert(!value.resource_path.contains(resource_path), ("resource (%s) was created" + \
-			"as a sub-resource of this JSONResourceFileInstance. That is not supported. " + \
-			"Drag & drop an existing resource file from the filesystem to this property.") \
-			% value)
+			"is only designed for resources or sub resources saved to a file") % value)
 		
+		_set_other_property = false
 		resource = value
+		path_to_resource = "" if resource == null else resource.resource_path
+		_set_other_property = true
+
+
+## Alternative to setting [member resource]. Supports sub-resources as long as
+## you enter the correct path. Must be manually updated if the sub resource path
+## changes though.
+@export var path_to_resource: String:
+	set(value):
+		# Behavior when set from resource or in game
+		if !_set_other_property || !Engine.is_editor_hint():
+			path_to_resource = value
+			_set_other_property = true
+			return
+		
+		_set_other_property = false
+		path_to_resource = value
+		if value.is_empty():
+			resource = null
+		elif ResourceLoader.exists(path_to_resource):
+			resource = load(path_to_resource)
+		
+		_set_other_property = true
+
+## If true, [JSONProperty]s defined in the [JSONObjectConfig] are serialized & also
+## deserialized and set to [member resource]. If false, the properties are ignored.
+## Usually false since this feature was meant for resource files that are static to a project,
+## & not meant to dynamically change. But this is here for flexibility, ultimately up to you.
+@export var include_properties: bool = false
+
+# Internal 
+var _set_other_property: bool = true
 
 ## Internal flag to prevent [member id] from changing at runtime.
 var _id_initialized: bool = false
 
-## Returns the [member Resource.resource_path] of [member resource], or an
-## empty string if [member resource] is null.
-func get_resource_path() -> String:
-	return "" if resource == null else resource.resource_path
+var _editor_type_hint: StringName
+
+func _validate_property(property: Dictionary) -> void:
+	if property.name == "resource" && !_editor_type_hint.is_empty():
+		property.hint_string = _editor_type_hint
