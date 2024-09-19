@@ -239,15 +239,6 @@ func is_resource() -> bool:
 	return false
 
 
-## Returns the internal [Dictionary] of [member JSSONResourceFileInstance.id]:[JSONResourceFileInstance].
-## If that dictionary has not yet been populated from [member json_res_file_instances],
-## that is done so first and then it is returned.
-func get_resource_file_instances_by_path() -> Dictionary:
-	return _file_instances_by_path
-	assert(!Engine.is_editor_hint(), "method not supported in the Editor")
-	return _file_instances_by_path
-
-
 ## Populates the internal [member _file_instances_by_path] from the [param array].
 ## Only available at runtime, not in the editor.
 func _populate_resource_dictionaries(array: Array[JSONResourceFileInstance]) -> void:

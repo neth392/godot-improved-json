@@ -86,3 +86,7 @@ var _editor_type_hint: StringName
 func _validate_property(property: Dictionary) -> void:
 	if property.name == "resource" && !_editor_type_hint.is_empty():
 		property.hint_string = _editor_type_hint
+
+
+func _to_string() -> String:
+	return "JSONResourceFileInstance(id=%s,path_to_resource=%s)" % [id, path_to_resource]
