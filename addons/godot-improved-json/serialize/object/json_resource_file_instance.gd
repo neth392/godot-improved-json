@@ -36,6 +36,8 @@ class_name JSONResourceFileInstance extends Resource
 		if value != null:
 			assert(!value.resource_path.is_empty(), ("resource (%s)'s path is empty, this feature" + \
 			"is only designed for resources or sub resources saved to a file") % value)
+			if id.is_empty():
+				id = value.resource_path.get_file()
 		
 		_set_other_property = false
 		resource = value
@@ -60,6 +62,8 @@ class_name JSONResourceFileInstance extends Resource
 			resource = null
 		elif ResourceLoader.exists(path_to_resource):
 			resource = load(path_to_resource)
+			if id.is_empty():
+				id = path_to_resource.get_file()
 		
 		_set_other_property = true
 
