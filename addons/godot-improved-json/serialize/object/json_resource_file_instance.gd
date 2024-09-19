@@ -9,7 +9,7 @@ class_name JSONResourceFileInstance extends Resource
 ## The ID of this resource file. Stored in JSON in place of the [member resource]'s
 ## [member Resource.resource_path] so that the resource's path can change without breaking
 ## stored JSON.
-@export var id: String:
+@export var id: StringName:
 	set(value):
 		if !Engine.is_editor_hint() && _id_initialized:
 			assert(false, "can't change JSONResourceFileInstance.id at runtime")
@@ -69,12 +69,14 @@ class_name JSONResourceFileInstance extends Resource
 ## & not meant to dynamically change. But this is here for flexibility, ultimately up to you.
 @export var include_properties: bool = false
 
-# Internal 
+# Internal flag to keep resource & path_to_resource from causing a stack overflow
+# by infinitely updating each other
 var _set_other_property: bool = true
 
-## Internal flag to prevent [member id] from changing at runtime.
+# Internal flag to prevent [member id] from changing at runtime.
 var _id_initialized: bool = false
 
+# Internal class name used in the property hint of resource
 var _editor_type_hint: StringName
 
 func _validate_property(property: Dictionary) -> void:

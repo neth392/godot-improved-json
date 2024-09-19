@@ -40,8 +40,8 @@ class_name JSONObjectConfig extends Resource
 		if Engine.is_editor_hint() && id.is_empty() && !for_class.is_empty():
 			id = for_class
 		
-		
 		_editor_update()
+		
 	get():
 		if set_for_class_by_script != null && !set_for_class_by_script.get_global_name().is_empty():
 			return set_for_class_by_script.get_global_name()
@@ -99,7 +99,10 @@ class_name JSONObjectConfig extends Resource
 ## the old path.
 ## [br]If false, [member json_res_instances] is used (see those docs for more info).
 ## [br][code]false[/code] by default to prevent breakages by changing resource paths.
-@export var _json_res_use_resource_path: bool = false
+@export var _json_res_use_resource_path: bool = false:
+	set(value):
+		_json_res_use_resource_path = value
+		notify_property_list_changed()
 
 ## Array of [JSONResourceFileInstance]s that must contain every [Resource] file instance
 ## that can be used in place of constructing a new resource.
@@ -140,6 +143,9 @@ func _validate_property(property: Dictionary) -> void:
 	# Hide resource properties if type is not of resource
 	if property.name.begins_with("_json_res_") && !is_resource():
 		property.usage = PROPERTY_USAGE_STORAGE
+	
+	if property.name == "_json_res_resource_file_instances" && _json_res_use_resource_path:
+		property.usage |= PROPERTY_USAGE_READ_ONLY
 
 
 ## Returns a new [Array] of all [JSONProperty]s of this instance and [member extend_other_config]
