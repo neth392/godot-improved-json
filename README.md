@@ -30,7 +30,7 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 - Editor tools for quickly creating JSON object configurations
 	- Simply dragging & dropping a script or PackedScene will auto populate most of the fields needed to create a JSON object configuration.
 	- When selecting properties to be serialized, the addon automatically detects what properties your class has and suggests them via a drop down so you don't have to worry about typos.
-- Ability to store "references" to `*.tres` Resource files within JSON, and upon deserialization load the object from the actual resource file. (see [Resource File Instances](#Resource-File-Instances) for a better explanation)
+- Ability to store "references" to local `*.tres` Resource files within JSON, and upon deserialization load an instance from the resource file. (see [Resource File Instances](#Resource-File-Instances) for a better explanation)
 
 <br>  
 
@@ -216,11 +216,11 @@ You're now able to serialize & deserialize your own custom objects. Just remembe
 <br>  
 
 ## Resource File Instances
-In some situations you may find yourself with an instance of a resource that was loaded from a file. There is a configurable system in place within `JSONObjectConfig` which instead of creating a new instance from JSON, will instead load the instance from a `.tres` file (using `CACHE_MODE_REUSE`). This can be useful as these instances will be the exact same and `==` each other, even if they appear multiple times in JSON.
+Within your project you're probably utilizing Godot's resource system, saving instances of resources to `.tres` files and then loading them. There is a configurable system in place within `JSONObjectConfig` that can load that exact instance of the `.tres` file instead of creating a new instance of the resource's class. This feature uses `CACHE_MODE_REUSE` so that when loaded from JSON they will directly `==` the same instance of that `.tres` you have loaded previously elsewhere in the project, or even `==` other instances of the same resource file that appear multiple times in the JSON.
 
 For these properties to appear in the editor inspector while modifying a `JSONObjectConfig`, the `for_class` or `set_for_class_by_script` must have `Resource` as an ancestor.
 
-**NOTE:** This feature will not be used if `deserialize_into` is set to true for any `JSONProperty` of a class that this is configured for. Nor will it work if `JSONSerialization.parse_into` is used. It will only work when dealing with constructing new resource instances from JSON.
+**NOTE:** This feature will not be used if `deserialize_into` is set to true for any `JSONProperty` of a class that this is configured for. Nor will it be used if `JSONSerialization.parse_into` is used. It will only work when dealing with constructing new resource instances from JSON.
 
 ### `maintain_resource_instances`
 This property enables or disables the "resource file instance" system. When enabled the below properties will appear in the editor.
