@@ -84,8 +84,7 @@ var supported_types: Dictionary = {}
 func _ready() -> void:
 	for type: Variant.Type in types_dict:
 		var type_name: String = types_dict[type]
-		var serializer: JSONSerializer = PrimitiveJSONSerializer.new()
-		serializer.primitive_type = type
+		var serializer: JSONSerializer = PrimitiveJSONSerializer.new(type)
 		var value: Variant = type_examples[type]
 		assert(type == typeof(value), "type example mismatch for type %s" % type_name)
 		
