@@ -226,9 +226,27 @@ For these properties to appear in the editor inspector while modifying a `JSONOb
 This property enables or disables the "resource file instance" system. When enabled the below properties will appear in the editor.
 
 ### `use_resource_path`
-If enabled this will store the `Resource.resource_path` in the JSON so that when it is deserialized, the instance is loaded from this path. It isn't recommended as resource paths change, and that will break the JSON. 
+If `true` this will store the `Resource.resource_path` in the JSON so that when it is deserialized, the instance is loaded from this path. It isn't recommended as resource paths change, and that will break the JSON. 
 
-### REST OF THIS SECTION IS A TODO (ASAP)
+### `include_properties_in_file_instances`
+If `true`, for every `Resource` instance with a `resource_path` (thus meeting the "maintain resource instances" criteria) all `JSONProperty` instances in `JSONObjectConfig.properties` will be included in the serialized JSON, and also included when deserializing. This means that properties will be read from that resource instance, stored to JSON, and then set to the resource instance which is directly linked to the `.tres` file. For that reason, this is usually recommended to leave this as `false` since the point of this system is to use references of `.tres` files from `res://`, and almost always those `.tres` files shouldn't be changed by the game, but only by you the developer.  
+
+### `resource_file_instances`
+Only applicable if `use_resource_path` is `false`. This is an array of `JSONResourceFileInstance`s, another resource added by this plugin. Each `JSONResourceFileInstance` represents a specific `.tres` file whose class is `JSONObjectConfig.for_class`. It allows for fine tuning of each resource, and preserves against resource file path/name changes due to its `id` property. It also allows enabling/disabling `JSONProperty` on a per-resource basis. The only downside is *every* `.tres` file you want to maintain an instance of will need to be added here.
+
+### `JSONResourceFileInstance`
+
+#### `id`
+This is exactly like `JSONObjectConfig.id`, and `JSONProperty.json_key`. It is stored in the JSON instead of the `.tres` path so that the path can change without breaking saved data.
+
+#### `resource`
+This is the actual `.tres` file. You should drag it from the inspector. When set, it'll auto-populate the `id` (if it is empty) with the file name for your convenience. It'll also set the `path_to_resource`.
+
+#### `path_to_resource`
+An alternative to `resource`, this can be set as well. Should support sub-resources if you have their exact path, but haven't tested.
+
+#### `include_properties`
+The same as `JSONObjectConfig.include_properties_in_file_instances`, but only applies to the `resource` set above. 
 <br>  
 
 
