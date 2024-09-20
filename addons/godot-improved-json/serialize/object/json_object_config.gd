@@ -41,6 +41,7 @@ class_name JSONObjectConfig extends Resource
 			id = for_class
 		
 		_editor_update()
+		notify_property_list_changed()
 		
 	get():
 		if set_for_class_by_script != null && !set_for_class_by_script.get_global_name().is_empty():
@@ -90,7 +91,6 @@ class_name JSONObjectConfig extends Resource
 	set(value):
 		properties = value
 		_editor_update()
-		notify_property_list_changed()
 
 @export_group("Resource File Instances", "json_res_")
 
@@ -278,14 +278,14 @@ func _editor_update() -> void:
 	
 	for property: JSONProperty in properties:
 		if property != null:
-			property._editor_class_name = for_class
-			property._editor_script = set_for_class_by_script
+			if property._editor_class_name != for_class:
+				property._editor_class_name = for_class
+			if property._editor_script != set_for_class_by_script:
+				property._editor_script = set_for_class_by_script
 	
 	for instance: JSONResourceFileInstance in json_res_resource_file_instances:
 		if instance != null:
 			instance._editor_type_hint = for_class
-	
-	notify_property_list_changed()
 
 
 func _to_string() -> String:

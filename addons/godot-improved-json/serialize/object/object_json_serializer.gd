@@ -25,11 +25,15 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	}
 	
 	if config.is_resource() && config.json_res_maintain_resource_instances:
+		
 		assert(object is Resource, ("object (%s) not of type Resource but its  " + \
 		"JSONObjectConfig(%s) has json_res_maintain_resource_instances as true") % [object, config.id])
+		
 		if !object.resource_path.is_empty():
+			
 			# Handle configs for resources with maintain instances
 			if config.json_res_use_resource_path:
+				
 				to_return["r"] = object.resource_path
 				if config.json_res_include_properties_in_file_instances:
 					_serialize_set_properties(object, config, serialized, impl)
@@ -69,7 +73,7 @@ impl: JSONSerializationImpl) -> void:
 		
 		# Check if property exists in the object
 		if property.property_name not in object:
-			print("")
+			
 			match property.if_missing_in_object_serialize:
 				JSONProperty.IfMissing.WARN_DEBUG:
 					push_warning("property (%s) missing in object (%s) of class (%s)" \
@@ -113,9 +117,11 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 				return instance
 	
 	assert(config.instantiator != null, ("config (%s)'s instantiator is null, use " + \
-	"_deserialize_into() with an existing instance instead") % config)
+	"_deserialize_into() with an existing instance instead when deserializing (%s)") \
+	% [config, serialized])
 	assert(config.instantiator._can_instantiate(), ("cant instantiate config %s, use " + \
-	"_deserialize_into() with an existing instance instead") % config)
+	"_deserialize_into() with an existing instance instead when deserializing (%s)") \
+	% [config, serialized])
 	
 	# Create instance
 	instance = config.instantiator._instantiate()
