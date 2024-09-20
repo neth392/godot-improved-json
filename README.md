@@ -222,6 +222,13 @@ For these properties to appear in the editor inspector while modifying a `JSONOb
 
 **NOTE:** This feature will not be used if `deserialize_into` is set to true for any `JSONProperty` of a class that this is configured for. Nor will it be used if `JSONSerialization.parse_into` is used. It will only work when dealing with constructing new resource instances from JSON.
 
+Example use case:
+
+- You have a resource file `sword_item.tres` whose script is `item.gd` & class is `class_name Item extends Resource`
+- You want to serialize your `Player` node, who has a property of `items: Array[Item]`
+- Before this change, a new `Item` instance would be created during deserialization. Same property values as `sword_item.tres` but it would NOT equal (`==`) `load("sword_item.tres")`. Therefore, `items.has(sword_item)` would return false. 
+- Now, with the proper configuration (see new docs), you can load `sword_item.tres` to `var sword_item`, and after deserializing the `Player` into `var player`, `player.items.has(sword_item)` will return true as the exact resource instance was loaded by Improved JSON from `sword_item.tres` via `CACHE_MODE_REUSE`.
+
 ### `maintain_resource_instances`
 This property enables or disables the "resource file instance" system. When enabled the below properties will appear in the editor.
 
