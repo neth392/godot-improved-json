@@ -166,8 +166,13 @@ func _ready() -> void:
 		# Connect to changes
 		ProjectSettings.settings_changed.connect(_on_project_settings_changed)
 		
-		EditorInterface.get_file_system_dock().files_moved.connect(_on_file_moved)
-		EditorInterface.get_file_system_dock().file_removed.connect(_on_file_removed)
+		# Load the editor tools script to get the FileSystemDock instance;
+		# EditorInterface does not exist in exported projects.
+		var editor_tools_path: String = get_script().resource_path.get_base_dir() + \
+		"/json_serialization_editor_tools.gd"
+		var editor_tools: Object = load(editor_tools_path).new()
+		editor_tools.get_file_system_dock().files_moved.connect(_on_file_moved)
+		editor_tools.get_file_system_dock().file_removed.connect(_on_file_removed)
 	
 	# Load the registry
 	_reload_registry(!Engine.is_editor_hint())
