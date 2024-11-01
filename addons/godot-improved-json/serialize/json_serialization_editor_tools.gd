@@ -1,5 +1,5 @@
 ## Created to be conditionally loaded to access some editor features.
-extends Object
+extends RefCounted
 
 
 ## Returns the EditorInterface's [FileSystemDock] instance.
