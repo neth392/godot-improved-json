@@ -19,3 +19,4 @@ LICENSE export-ignore
 project.godot export-ignore
 README.md export-ignore
 create_release.sh export-ignore
+.editorconfig export-ignore

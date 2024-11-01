@@ -2,6 +2,7 @@
 .godot/
 /android/
 *.tmp
+.editorconfig
 
 # Obisidian MD Editor
 .obsidian/
