@@ -31,6 +31,7 @@ Godot Improved JSON is a Godot 4.3 or later addon that provides seamless methods
 	- Simply dragging & dropping a script or PackedScene will auto populate most of the fields needed to create a JSON object configuration.
 	- When selecting properties to be serialized, the addon automatically detects what properties your class has and suggests them via a drop down so you don't have to worry about typos.
 - Ability to store "references" to local `*.tres` Resource files within JSON, and upon deserialization load an instance from the resource file. (see [Resource File Instances](#Resource-File-Instances) for a better explanation)
+- WeakRef support, works well with the above resource file instance system.
 
 <br>  
 
