@@ -51,7 +51,11 @@ var _json: JSON = JSON.new()
 # DO NOT MAKE THIS TRUE. In unit testing if this is true I manually add 1 to the reference counter
 # when testing the WeakRef code. This WILL break your game if you mess with this.
 # It is so serious that I have broken the holy variable naming conventions for this one.
-var _test_mode_DO_NOT_TOUCH: bool = false
+var _test_mode_DO_NOT_TOUCH: bool = false:
+	set(_value):
+		if !OS.is_debug_build():
+			push_error("Do NOT change this. This is for Improve JSON's own unit tests.")
+		_test_mode_DO_NOT_TOUCH = _value
 
 ## Returns the underlying [JSON] instance in use by this instance.
 func get_json() -> JSON:
