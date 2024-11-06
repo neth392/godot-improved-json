@@ -26,3 +26,7 @@ var type_value_typed_dictionary_of_objects: Dictionary[Variant, JSONTestObject_4
 	JSONTestObject_4_4.new(): JSONTestObject_4_4.new(),
 	JSONTestObject_4_4.new(): JSONTestObject_4_4.new(),
 }
+var type_weak_ref: WeakRef = weakref(type_object)
+var type_weak_ref_null: WeakRef = weakref(null)
+var type_nested_weak_ref: WeakRef = weakref(type_weak_ref)
+var type_nested_twice_weak_ref: WeakRef = weakref(type_nested_weak_ref)

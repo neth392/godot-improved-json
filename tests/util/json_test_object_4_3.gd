@@ -44,4 +44,4 @@ var type_array_of_random_arrays: Array[Array] = [[1, 2, 3, 4, 5, 6], ["hi!", "he
 var type_untyped_dictionary: Dictionary = {"yo": Vector3(1.0,2.0,3.0), 2: -4.0, Color.RED: false}
 var type_empty_untyped_array: Array = []
 var type_empty_typed_array: Array[Node] = []
-var empty_untyped_dictionary: Dictionary = {}
+var type_empty_untyped_dictionary: Dictionary = {}

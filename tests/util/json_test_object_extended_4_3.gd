@@ -11,3 +11,7 @@ var type_untyped_dictionary_of_objects: Dictionary = {
 	JSONTestObject_4_3.new(): JSONTestObject_4_3.new(),
 	JSONTestObject_4_3.new(): JSONTestObject_4_3.new(),
 }
+var type_weak_ref: WeakRef = weakref(type_object)
+var type_weak_ref_null: WeakRef = weakref(null)
+var type_nested_weak_ref: WeakRef = weakref(weakref(type_object))
+var type_nested_twice_weak_ref: WeakRef = weakref(weakref(weakref(type_object)))

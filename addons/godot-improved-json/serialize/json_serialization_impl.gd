@@ -48,6 +48,11 @@ var _basis: JSONSerializer
 # Internal JSON object & errors
 var _json: JSON = JSON.new()
 
+# DO NOT MAKE THIS TRUE. In unit testing if this is true I manually add 1 to the reference counter
+# when testing the WeakRef code. This WILL break your game if you mess with this.
+# It is so serious that I have broken the holy variable naming conventions for this one.
+var _test_mode_DO_NOT_TOUCH: bool = false
+
 ## Returns the underlying [JSON] instance in use by this instance.
 func get_json() -> JSON:
 	return _json

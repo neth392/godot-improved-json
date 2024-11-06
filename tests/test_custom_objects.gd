@@ -12,6 +12,7 @@ func before_all() -> void:
 	
 	# Create a new impl to use
 	impl = JSONSerialization.new_impl()
+	impl._test_mode_DO_NOT_TOUCH = true
 	# Change these default values to preserve ordering
 	impl.sort_keys = false
 	impl.full_precision = true 
@@ -153,6 +154,7 @@ func test_assert_property_deserialized_equals_original(params = use_parameters(p
 	"is (%s) not equal to the original value (%s)\ncause=%s") \
 	% [json_property.property_name, deserialized_value, original_value, result])
 
+
 # Below is custom comparator logic to help isolate which property is not correct
 # and why. It searches deep into objects (& arrays/dictionarys who have objects)
 # and returns the root reason that caused the variants to not be equal
@@ -161,6 +163,8 @@ func _deep_compare(original: Variant, _deserialized: Variant) -> String:
 	if typeof(original) != typeof(_deserialized):
 			return "type of original (%s) != type of _deserialized (%s)" \
 			% [JSONTestUtil.get_type_of(original), JSONTestUtil.get_type_of(_deserialized)]
+	elif original is WeakRef:
+		return _deep_compare_weakref(original, _deserialized)
 	elif original is Object:
 		return _deep_compare_object(original, _deserialized)
 	elif original is Array:
@@ -216,6 +220,14 @@ func _deep_compare_dictionary(original: Dictionary, _deserialized: Variant) -> S
 			% [index, original_key, deserialized_key, original_key, key_result]
 	
 	return ""
+
+
+func _deep_compare_weakref(original: WeakRef, _deserialized: Variant) -> String:
+	if !(_deserialized is WeakRef):
+		return "_deserialized not of type WeakRef"
+	
+	return _deep_compare(original.get_ref(), _deserialized.get_ref())
+
 
 # Only supports JSONTestObjectExtended
 func _deep_compare_object(original: Object, _deserialized: Variant) -> String:

@@ -10,6 +10,22 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	
 	var object: Object = instance as Object
 	
+	var to_return: Dictionary = {}
+	
+	# WeakRef support, mark as wekref & reassign object to the referred
+	if object is WeakRef:
+		to_return["w"] = 1
+		object = object.get_ref()
+		# Infinite WeakRefs (no idea why anyone would nest weakrefs but someone might...)
+		while object is WeakRef:
+			to_return["w"] += 1
+			object = object.get_ref()
+		
+		# WeakRef with null value
+		if object == null:
+			to_return["wn"] = "t"
+			return to_return
+	
 	# Determine the class
 	var object_class: StringName = GodotJSONUtil.get_class_name(object)
 	assert(!object_class.is_empty(), "object (%s) does not have a class defined" % object_class)
@@ -19,10 +35,8 @@ func _serialize(instance: Variant, impl: JSONSerializationImpl) -> Variant:
 	assert(config != null, "no JSONObjectConfig found for object_class %s" % object_class)
 	
 	var serialized: Dictionary = {}
-	var to_return: Dictionary = {
-		"i": config.id,
-		"v": serialized,
-	}
+	to_return["i"] = config.id
+	to_return["v"] = serialized
 	
 	if config.is_resource() && config.json_res_maintain_resource_instances:
 		
@@ -88,6 +102,15 @@ impl: JSONSerializationImpl) -> void:
 
 
 func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
+	# Is null WeakRef
+	if serialized.has("wn"):
+		var instance: WeakRef = weakref(null)
+		for i: int in (int(serialized["w"]) - 1):
+			if impl._test_mode_DO_NOT_TOUCH:
+				instance.reference()
+			instance = weakref(instance)
+		return instance
+	
 	var config: JSONObjectConfig = _get_config(serialized, impl)
 	
 	var instance: Object
@@ -128,12 +151,32 @@ func _deserialize(serialized: Variant, impl: JSONSerializationImpl) -> Variant:
 	assert(instance != null, "config (%s)'s instantiator._instantiate() returned null" % config)
 	
 	_deserialize_set_properties(serialized, instance, impl, config)
+	
+	# WeakRef support
+	if serialized.has("w"):
+		if impl._test_mode_DO_NOT_TOUCH && instance is RefCounted:
+			instance.reference()
+		instance = weakref(instance)
+		for i: int in (int(serialized["w"]) - 1):
+			if impl._test_mode_DO_NOT_TOUCH:
+				instance.reference()
+			instance = weakref(instance)
+	
 	return instance
 
 
 func _deserialize_into(serialized: Variant, instance: Variant, impl: JSONSerializationImpl) -> void:
 	assert(instance != null, "instance is null; can't deserialize into a null instance")
 	assert(instance is Object, "instance not of type Object")
+	assert(!serialized.has("w") || !(instance is WeakRef), "serialized data & instance have a " + \
+	"WeakRef type mismatch; serialized data does not contain 'w' key or instance is not of type WeakRef")
+	assert(!serialized.has("wn"), "serialized of type WeakRef will null ref, can not deserialize into")
+	
+	# WeakRef support
+	while instance is WeakRef:
+		instance = instance.get_ref()
+		assert(instance != null, "instance's WeakRef.get_ref() is null; can't deserialize into a null instance")
+		assert(instance is Object, "instance's WeakRef.get_ref() not of type Object")
 	
 	# Determine config ID
 	var config: JSONObjectConfig = _get_config(serialized, impl)
