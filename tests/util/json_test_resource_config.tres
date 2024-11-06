@@ -1,10 +1,16 @@
-[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=10 format=3 uid="uid://bj0hioke1y03t"]
+[gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=16 format=3 uid="uid://bj0hioke1y03t"]
 
 [ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_property.gd" id="1_cwhld"]
 [ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_resource_file_instance.gd" id="1_jlg2h"]
 [ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/json_object_config.gd" id="2_bhdto"]
 [ext_resource type="Resource" uid="uid://d0efdowjmymf5" path="res://tests/util/json_test_resource.tres" id="2_n1f3t"]
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialize/object/instantiator/json_script_instantiator.gd" id="2_warij"]
+[ext_resource type="Resource" uid="uid://c0dhn23gyaycj" path="res://tests/util/json_test_resource_weak_ref.tres" id="5_2tht8"]
 [ext_resource type="Script" path="res://tests/util/json_test_resource.gd" id="5_a151a"]
+
+[sub_resource type="Resource" id="Resource_05n1f"]
+script = ExtResource("2_warij")
+gd_script = ExtResource("5_a151a")
 
 [sub_resource type="Resource" id="Resource_ny8ou"]
 script = ExtResource("1_jlg2h")
@@ -12,6 +18,13 @@ id = &"json_test_resource.tres"
 resource = ExtResource("2_n1f3t")
 path_to_resource = "res://tests/util/json_test_resource.tres"
 include_properties = true
+
+[sub_resource type="Resource" id="Resource_f8gip"]
+script = ExtResource("1_jlg2h")
+id = &"json_test_resource_weak_ref.tres"
+resource = ExtResource("5_2tht8")
+path_to_resource = "res://tests/util/json_test_resource_weak_ref.tres"
+include_properties = false
 
 [sub_resource type="Resource" id="Resource_34cy0"]
 script = ExtResource("1_cwhld")
@@ -43,13 +56,36 @@ if_missing_in_object_serialize = 2
 if_missing_in_json = 2
 if_missing_in_object_deserialize = 2
 
+[sub_resource type="Resource" id="Resource_4ox08"]
+script = ExtResource("1_cwhld")
+json_key = &"type_sub_resource"
+property_name = "type_sub_resource"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+deserialize_into = false
+
+[sub_resource type="Resource" id="Resource_64260"]
+script = ExtResource("1_cwhld")
+json_key = &"type_weak_ref_of_resource_instance"
+property_name = "type_weak_ref_of_resource_instance"
+enabled = true
+allow_null = true
+if_missing_in_object_serialize = 2
+if_missing_in_json = 2
+if_missing_in_object_deserialize = 2
+deserialize_into = false
+
 [resource]
 script = ExtResource("2_bhdto")
 id = &"JSONTestResource"
 for_class = "JSONTestResource"
 set_for_class_by_script = ExtResource("5_a151a")
-properties = Array[ExtResource("1_cwhld")]([SubResource("Resource_34cy0"), SubResource("Resource_brvjf"), SubResource("Resource_l8p34")])
+instantiator = SubResource("Resource_05n1f")
+properties = Array[ExtResource("1_cwhld")]([SubResource("Resource_34cy0"), SubResource("Resource_brvjf"), SubResource("Resource_l8p34"), SubResource("Resource_4ox08"), SubResource("Resource_64260")])
 json_res_maintain_resource_instances = true
 json_res_use_resource_path = false
 json_res_include_properties_in_file_instances = false
-json_res_resource_file_instances = Array[ExtResource("1_jlg2h")]([SubResource("Resource_ny8ou")])
+json_res_resource_file_instances = Array[ExtResource("1_jlg2h")]([SubResource("Resource_ny8ou"), SubResource("Resource_f8gip")])

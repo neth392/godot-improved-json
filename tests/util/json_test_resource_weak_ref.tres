@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="JSONTestResource" load_steps=2 format=3 uid="uid://c0dhn23gyaycj"]
+
+[ext_resource type="Script" path="res://tests/util/json_test_resource.gd" id="1_05pto"]
+
+[resource]
+script = ExtResource("1_05pto")
+type_string = "This is only for the WeakRef"
+type_float = 339.922
+type_int = 339922
