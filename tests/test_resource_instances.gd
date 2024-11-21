@@ -1,14 +1,14 @@
 extends GutTest
 
-var impl: JSONSerializationImpl
-var config: JSONObjectConfig
-var resource_file_instance: JSONResourceFileInstance
+var impl: SerializationImpl
+var config: SerializationObjectConfig
+var resource_file_instance: ResourceFileInstance
 var weak_ref_resource_instance: Resource
 var resource: Resource
 
 func before_all() -> void:
-	impl = JSONSerialization.new_impl()
-	impl.object_config_registry = JSONObjectConfigRegistry.new()
+	impl = Serialization.new_impl()
+	impl.object_config_registry = SerializationObjectConfigRegistry.new()
 	config = preload("./util/json_test_resource_config.tres")
 	impl.object_config_registry.add_config(config)
 	weak_ref_resource_instance = preload("./util/json_test_resource_weak_ref.tres")

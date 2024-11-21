@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://sf4sv10mbkou"]
+
+[ext_resource type="Script" path="res://addons/godot-improved-json/serialization_singleton.gd" id="1_qp8m2"]
+
+[node name="Serialization" type="Node"]
+script = ExtResource("1_qp8m2")
+sort_keys = true

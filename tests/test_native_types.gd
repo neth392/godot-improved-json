@@ -19,12 +19,12 @@ func test_assert_deserialized_equals_original(params: Array = use_parameters(typ
 	var property_name: String = params[0]
 	var value: Variant = params[1]
 	
-	var serialized: Variant = JSONSerialization.stringify(value)
-	assert_not_null(serialized, ("JSONSerialization.stringify result is null for value (%s) of " + \
+	var serialized: Variant = Serialization.stringify(value)
+	assert_not_null(serialized, ("Serialization.stringify result is null for value (%s) of " + \
 	"property (%s) w/ type (%s)") % [value, property_name, JSONTestUtil.get_type_of(value)])
 	
-	var deserialized: Variant = JSONSerialization.parse(serialized)
-	assert_not_null(serialized, ("JSONSerialization.parse result is null for serialized value (%s) " + \
+	var deserialized: Variant = Serialization.parse(serialized)
+	assert_not_null(serialized, ("Serialization.parse result is null for serialized value (%s) " + \
 	"of property (%s) w/ type (%s)") % [serialized, property_name, JSONTestUtil.get_type_of(value)])
 	
 	var compare_result: Variant = compare_deep(value, deserialized)

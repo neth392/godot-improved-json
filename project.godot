@@ -10,12 +10,12 @@ config_version=5
 
 [application]
 
-config/name="improved-godot-json"
+config/name="improved-godot-serialization"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
 [autoload]
 
-JSONSerialization="*res://addons/godot-improved-json/serialize/json_serialization.tscn"
+JSONSerialization="*res://addons/godot-improved-json/serialization.tscn"
 
 [editor_plugins]
 

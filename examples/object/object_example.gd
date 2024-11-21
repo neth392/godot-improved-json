@@ -2,11 +2,11 @@ class_name ObjectExample extends Node
 
 
 func _ready() -> void:
-	# Since this example doesn't have JSONObjectConfigRegistry.tres file I'll manually add these
-	# to the default registry of JSONSerialization.
-	JSONSerialization.object_config_registry.add_config(load("res://examples/object/config_game_player.tres"))
-	JSONSerialization.object_config_registry.add_config(load("res://examples/object/config_game_item.tres"))
-	JSONSerialization.object_config_registry.add_config(load("res://examples/object/config_game_item_chest.tres"))
+	# Since this example doesn't have SerializationObjectConfigRegistry.tres file I'll manually add these
+	# to the default registry of Serialization.
+	Serialization.object_config_registry.add_config(load("res://examples/object/config_game_player.tres"))
+	Serialization.object_config_registry.add_config(load("res://examples/object/config_game_item.tres"))
+	Serialization.object_config_registry.add_config(load("res://examples/object/config_game_item_chest.tres"))
 	
 	
 	# We'll construct some bogus player & item data, this would come from your own game
@@ -61,7 +61,7 @@ func _ready() -> void:
 	# all of the items are stored in it.
 	
 	# Serialization time, it's this easy.
-	var json: String = JSONSerialization.stringify(my_player)
+	var json: String = Serialization.stringify(my_player)
 	
 	# Printing it out in case you want to see what it looks like, I recommend
 	# pasting it into a JSON beauitifier.
@@ -84,7 +84,7 @@ func _ready() -> void:
 	# is a NEW instance of a GamePlayer. But has the same data.
 	# Note the cast "as GamePlayer"; parse(json) returns a Variant so
 	# for the editor to respect that this is a GamePlayer we have to cast.
-	my_player = JSONSerialization.parse(json) as GamePlayer
+	my_player = Serialization.parse(json) as GamePlayer
 	
 	# We can run a quick check to see if it matches up (which it will)
 	if my_player.to_string() == old_player_string:

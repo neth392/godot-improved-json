@@ -1,6 +1,6 @@
 extends GutTest
 
-var impl: JSONSerializationImpl
+var impl: SerializationImpl
 var object: Object
 var properties_to_test: Array[Array] = []
 var properties_to_test_names: PackedStringArray = PackedStringArray()
@@ -11,23 +11,23 @@ func before_all() -> void:
 	var test_object_extended_script: GDScript = JSONTestUtil.load_test_object_extended_script()
 	
 	# Create a new impl to use
-	impl = JSONSerialization.new_impl()
+	impl = Serialization.new_impl()
 	impl._test_mode_DO_NOT_TOUCH = true
 	# Change these default values to preserve ordering
 	impl.sort_keys = false
 	impl.full_precision = true 
 	# Give it a new registry for these tests
-	impl.object_config_registry = JSONObjectConfigRegistry.new()
+	impl.object_config_registry = SerializationObjectConfigRegistry.new()
 	
-	# Create JSONObjectConfig
-	var config: JSONObjectConfig = JSONObjectConfig.new()
+	# Create SerializationObjectConfig
+	var config: SerializationObjectConfig = SerializationObjectConfig.new()
 	config.id = &"JSONTestObject"
 	
 	# Load script & set it
 	config.set_for_class_by_script = test_object_script
 	
 	# Create & set instantiator 
-	config.instantiator = JSONScriptInstantiator.new()
+	config.instantiator = ScriptInstantiator.new()
 	config.instantiator.gd_script = test_object_script
 	
 	# Add JSONTestObject properties to config
@@ -36,8 +36,8 @@ func before_all() -> void:
 		if !property.name.begins_with(JSONTestUtil.PROPERTY_PREFIX):
 			continue
 		parent_properties.append(property.name)
-		var json_property: JSONProperty = JSONProperty.new()
-		json_property.json_key = "key_" + property.name
+		var json_property: SerializableProperty = SerializableProperty.new()
+		json_property.key = "key_" + property.name
 		json_property.property_name = property.name
 		config.properties.append(json_property)
 		properties_to_test_names.append(json_property.property_name)
@@ -46,7 +46,7 @@ func before_all() -> void:
 	impl.object_config_registry.add_config(config)
 	
 	# Create extended config
-	var extended_config: JSONObjectConfig = JSONObjectConfig.new()
+	var extended_config: SerializationObjectConfig = SerializationObjectConfig.new()
 	extended_config.id = &"JSONTestObjectExtended"
 	
 	# Set original config to extend this one
@@ -60,14 +60,14 @@ func before_all() -> void:
 		# Skip properties who aren't parents
 		if !property.name.begins_with(JSONTestUtil.PROPERTY_PREFIX) || parent_properties.has(property.name):
 			continue
-		var json_property: JSONProperty = JSONProperty.new()
-		json_property.json_key = "key_" + property.name
+		var json_property: SerializableProperty = SerializableProperty.new()
+		json_property.key = "key_" + property.name
 		json_property.property_name = property.name
 		extended_config.properties.append(json_property)
 		properties_to_test_names.append(json_property.property_name)
 	
 	# Create & set extended instantiator
-	extended_config.instantiator = JSONScriptInstantiator.new()
+	extended_config.instantiator = ScriptInstantiator.new()
 	extended_config.instantiator.gd_script = test_object_extended_script
 	
 	# Add extended to global instance
@@ -77,7 +77,7 @@ func before_all() -> void:
 	object = test_object_extended_script.new()
 	
 	# Register properties to test in param array
-	for property: JSONProperty in impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")\
+	for property: SerializableProperty in impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")\
 	.get_properties_extended():
 		properties_to_test.append([property])
 
@@ -113,10 +113,10 @@ func test_assert_extended_config_exists() -> void:
 
 func test_assert_extended_config_has_parent_properties() -> void:
 	# Get config
-	var config: JSONObjectConfig = impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")
+	var config: SerializationObjectConfig = impl.object_config_registry.get_config_by_id(&"JSONTestObjectExtended")
 	# Create array of property names to test for
 	var property_names: PackedStringArray = PackedStringArray()
-	for json_property: JSONProperty in config.get_properties_extended():
+	for json_property: SerializableProperty in config.get_properties_extended():
 		property_names.append(json_property.property_name)
 	
 	for property: Dictionary in JSONTestUtil.load_test_object_script().get_script_property_list():
@@ -141,7 +141,7 @@ func test_deserialized_is_correct_object() -> void:
 
 
 func test_assert_property_deserialized_equals_original(params = use_parameters(properties_to_test)) -> void:
-	var json_property: JSONProperty = params[0] as JSONProperty
+	var json_property: SerializableProperty = params[0] as SerializableProperty
 	assert_not_null(json_property, "properties_to_test has null value (this is an error w/ this test)")
 	
 	assert_true(json_property.property_name in deserialized, ("deserialized does not contain expected " + \
@@ -234,8 +234,8 @@ func _deep_compare_object(original: Object, _deserialized: Variant) -> String:
 	if !(_deserialized is Object):
 		return "_deserialized not of type Object"
 	
-	var original_class: String = GodotJSONUtil.get_class_name(original)
-	var deserialized_class: String = GodotJSONUtil.get_class_name(_deserialized)
+	var original_class: String = SerializationUtil.get_class_name(original)
+	var deserialized_class: String = SerializationUtil.get_class_name(_deserialized)
 	if original_class != deserialized_class:
 		return "_deserialized class (%s) != original class (%s)" % [original_class, deserialized_class]
 	
