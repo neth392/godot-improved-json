@@ -3,9 +3,9 @@
 @tool
 class_name SerializationSingleton extends SerializationImpl
 
-const _DEFAULT_REGISTRY_PATH: String = "res://json_object_config_registry.tres"
+const _DEFAULT_REGISTRY_PATH: String = "res://object_config_registry.tres"
 
-const _SETTING_PATH: String = "improved_json/config/json_object_config_registry"
+const _SETTING_PATH: String = "improved_serialization/config/object_config_registry"
 
 var _registry_path: String:
 	get():

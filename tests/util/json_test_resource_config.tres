@@ -1,12 +1,12 @@
 [gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=16 format=3 uid="uid://bj0hioke1y03t"]
 
-[ext_resource type="Script" path="res://addons/godot-improved-json/object/serializable_property.gd" id="1_cwhld"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/object/resource_file_instance.gd" id="1_jlg2h"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/object/serialization_object_config.gd" id="2_bhdto"]
+[ext_resource type="Script" uid="uid://bhfa4dheksoj7" path="res://addons/godot-improved-json/object/serializable_property.gd" id="1_cwhld"]
+[ext_resource type="Script" uid="uid://xfycxqt0yewn" path="res://addons/godot-improved-json/object/resource_file_instance.gd" id="1_jlg2h"]
+[ext_resource type="Script" uid="uid://d3gwnxvbkre5d" path="res://addons/godot-improved-json/object/serialization_object_config.gd" id="2_bhdto"]
 [ext_resource type="Resource" uid="uid://d0efdowjmymf5" path="res://tests/util/json_test_resource.tres" id="2_n1f3t"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/serializer/object/instantiator/script_instantiator.gd" id="2_warij"]
+[ext_resource type="Script" uid="uid://hn8vrevu578n" path="res://addons/godot-improved-json/object/instantiator/script_instantiator.gd" id="2_warij"]
 [ext_resource type="Resource" uid="uid://c0dhn23gyaycj" path="res://tests/util/json_test_resource_weak_ref.tres" id="5_2tht8"]
-[ext_resource type="Script" path="res://tests/util/json_test_resource.gd" id="5_a151a"]
+[ext_resource type="Script" uid="uid://c7qj0frme64jf" path="res://tests/util/json_test_resource.gd" id="5_a151a"]
 
 [sub_resource type="Resource" id="Resource_05n1f"]
 script = ExtResource("2_warij")

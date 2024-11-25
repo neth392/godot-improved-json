@@ -3,32 +3,35 @@
 @tool
 class_name SerializationImpl extends Node
 
+@export_group("json", "json_")
+
 ## Parameter used in [method JSON.stringify]. From the Godot docs: The indent 
 ## parameter controls if and how something is indented; its contents will be 
 ## used where there should be an indent in the output. Even spaces like 
 ## "   " will work. \t and \n can also be used for a tab indent, or to make 
 ## a newline for each indent respectively.
-@export_storage var indent: String = ""
+@export_storage var json_indent: String = ""
 
 ## Parameter used in [method JSON.stringify]. Initially to set to false to preserve 
 ## serialized [Dictionary] order. There is no description of this parameter in the
 ## Godot docs, but I believe that it just sorts the JSON keys in a particular order.
 ## Usually that shouldn't matter and this should be left false.
-@export_storage var sort_keys: bool = false
+@export_storage var json_sort_keys: bool = false
 
-## Parameter used in [method JSON.stringify], from the Godot docs: If full_precision is true, 
+## Parameter used in [method JSON.stringify], from the Godot docs: If true, 
 ## when stringifying floats, the unreliable digits are stringified in addition to the 
 ## reliable digits to guarantee exact decoding.
-@export_storage var full_precision: bool = false
+@export_storage var json_full_precision: bool = false
 
 ## Parameter used in [method JSON.parse], from the Godot docs: The optional keep_text 
 ## argument instructs the parser to keep a copy of the original text. 
 ## This text can be obtained later by using the get_parsed_text() function 
 ## and is used when saving the resource (instead of generating new text from data).
-@export_storage var keep_text: bool = false
+@export_storage var json_keep_text: bool = false
 
 ## [member Serializer.id]:[Serializer]
-var _serializers: Dictionary = {}
+var _json_serializers: Dictionary = {}
+var _binary_serializers: Dictionary = {}
 var _can_deserialize_into: Dictionary = {}
 
 ## The user's [SerializationObjectConfigRegistry] to allow adding [SerializationObjectConfig]s via

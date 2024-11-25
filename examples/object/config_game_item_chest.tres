@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="JSONObjectConfig" load_steps=8 format=3 uid="uid://cry1dsfofpfxc"]
 
 [ext_resource type="Resource" uid="uid://ckyyypvht0nmc" path="res://examples/object/config_game_item.tres" id="1_5f6mq"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/object/serializable_property.gd" id="1_uf6u4"]
-[ext_resource type="Script" path="res://examples/object/game_item_chest.gd" id="1_v0cqo"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/object/serialization_object_config.gd" id="2_24t8j"]
-[ext_resource type="Script" path="res://addons/godot-improved-json/serializer/object/instantiator/script_instantiator.gd" id="2_271ff"]
+[ext_resource type="Script" uid="uid://bhfa4dheksoj7" path="res://addons/godot-improved-json/object/serializable_property.gd" id="1_uf6u4"]
+[ext_resource type="Script" uid="uid://bbnronk714v30" path="res://examples/object/game_item_chest.gd" id="1_v0cqo"]
+[ext_resource type="Script" uid="uid://d3gwnxvbkre5d" path="res://addons/godot-improved-json/object/serialization_object_config.gd" id="2_24t8j"]
+[ext_resource type="Script" uid="uid://hn8vrevu578n" path="res://addons/godot-improved-json/object/instantiator/script_instantiator.gd" id="2_271ff"]
 
 [sub_resource type="Resource" id="Resource_b58ea"]
 script = ExtResource("2_271ff")
